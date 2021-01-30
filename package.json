@@ -17,11 +17,11 @@
 		"commands": [
 			{
 				"command": "doctestbtn.execDoctest",
-				"title": "Run Doctest (Terminal)",
+				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
 					"light": "./assets/ico_light.png",
-					"dark": "./assets/ico_dark.png"
+					"dark": "./assets/ico_dark_wBlue.png"
 				}
 			}
 		],
