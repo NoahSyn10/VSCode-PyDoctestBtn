@@ -87,3 +87,4 @@ function execDoctest(terminal: vscode.Terminal) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
