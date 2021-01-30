@@ -10,16 +10,37 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:doctestbtn.helloWorld"
+		"onCommand:doctestbtn.execDoctest"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "doctestbtn.helloWorld",
-				"title": "Hello World"
+				"command": "doctestbtn.execDoctest",
+				"title": "Run Doctest (Terminal)",
+				"category": "Doctest",
+				"icon": {
+					"light": "./assets/ico_light.png",
+					"dark": "./assets/ico_dark.png"
+				}
 			}
-		]
+		],
+		"menus":  {
+			"commandPalette": [
+				{
+					"command": "doctestbtn.execDoctest",
+					"when": "editorLangId == python",
+					"title": "Run Doctest in Terminal"
+				}
+			],
+			"editor/title": [
+				{
+				  "when": "editorLangId == python",
+				  "command": "doctestbtn.execDoctest",
+				  "group": "1_run"
+				}
+			  ]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
