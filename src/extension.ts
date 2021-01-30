@@ -68,8 +68,21 @@ function findTerminal(termName: String): number {
 }
 
 function execDoctest(terminal: vscode.Terminal) {
-	const doctestCmd = "echo 'Sent text immediately after creating'";
-	terminal.sendText(doctestCmd);
+	if (vscode.window.activeTextEditor) {
+		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;
+		const doctestPath = "doctest";
+		const filePath = vscode.window.activeTextEditor.document.fileName;
+
+		console.log("Running doctest");
+		console.log("Python path: '" + pythonPath + "'");
+		console.log("Doctest path: '" + doctestPath + "'");
+		console.log("File path: '" + filePath + "'\n");
+
+		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;
+		terminal.sendText(doctestCommand);
+	} else {
+		vscode.window.showErrorMessage("DoctestBtn Error: 'No active text editor'");
+	}
 }
 
 // this method is called when your extension is deactivated
