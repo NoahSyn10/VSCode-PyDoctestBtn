@@ -20,7 +20,7 @@
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
-					"light": "./assets/ico_light.png",
+					"light": "./assets/ico_light_wBlue.png",
 					"dark": "./assets/ico_dark_wBlue.png"
 				}
 			}
