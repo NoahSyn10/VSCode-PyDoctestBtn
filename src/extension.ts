@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "doctestbtn" is now active!');
+	console.log('DoctestBtn active\n');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -16,24 +16,27 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('doctestbtn.execDoctest', () => {
 		// The code you place here will be executed every time your command is executed
 		
-		const terminals = vscode.window.terminals;
+		const terminals = vscode.window.terminals;							// Get list of active terminals
 
-		if (findTerminal("Python") > -1) {
-			const pyTerminal = terminals[findTerminal("Python")];
-			pyTerminal.show();
-			execDoctest(pyTerminal);
-		} else if (findTerminal("Doctest") > -1) {
-			const docTerminal = terminals[findTerminal("Doctest")];
-			docTerminal.show();
-			execDoctest(docTerminal);
-		} else if (vscode.window.activeTerminal) {
-			const activeTerminal = vscode.window.activeTerminal;
-			activeTerminal.show();
-			execDoctest(activeTerminal);
-		} else {
-			const docTerminal = vscode.window.createTerminal(`Doctest`);
-			docTerminal.show();
-			execDoctest(docTerminal);
+		if (findTerminal("Python") > -1) {									// If a "Python" terminal exists:
+			const pyTerminal = terminals[findTerminal("Python")];			// Get index
+			pyTerminal.show();												// Force show to user
+			execDoctest(pyTerminal);										// Execute doctest
+
+		} else if (findTerminal("Doctest") > -1) {							// Next check for "Doctest" terminal
+			const docTerminal = terminals[findTerminal("Doctest")];    	 	// If exists: get index
+			docTerminal.show();												// Force show to user
+			execDoctest(docTerminal);										// Execute doctest
+
+		} else if (vscode.window.activeTerminal) {							// If neither exists check for any active terminal
+			const activeTerminal = vscode.window.activeTerminal;			// If one is running:
+			activeTerminal.show();											// Force show to user
+			execDoctest(activeTerminal);									// Execute doctest
+
+		} else {															// If no active terminal exists:
+			const docTerminal = vscode.window.createTerminal(`Doctest`);	// Open "Doctest" terminal
+			docTerminal.show();												// Force show to user
+			execDoctest(docTerminal);										// Execute doctest
 		}
 
 	});
@@ -41,45 +44,32 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-function selectTerminal(): Thenable<vscode.Terminal | undefined> {
-	interface TerminalQuickPickItem extends vscode.QuickPickItem {
-		terminal: vscode.Terminal;
-	}
-	const terminals = <vscode.Terminal[]>(<any>vscode.window).terminals;
-	const items: TerminalQuickPickItem[] = terminals.map(t => {
-		return {
-			label: `name: ${t.name}`,
-			terminal: t
-		};
-	});
-	return vscode.window.showQuickPick(items).then(item => {
-		return item ? item.terminal : undefined;
-	});
-}
-
 function findTerminal(termName: String): number {
-	const terminals = vscode.window.terminals;
+	const terminals = vscode.window.terminals;			// Get list of active terminals
 	for (let i = 0; i < terminals.length; i++) {
-		if (terminals[i].name === termName) {
-			return i;
+		if (terminals[i].name === termName) {			// Check each list for provided name
+			return i;									// Return index if found
 		}
 	}
-	return -1;
+	return -1;											// Return -1 otherwise
 }
 
 function execDoctest(terminal: vscode.Terminal) {
 	if (vscode.window.activeTextEditor) {
-		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;
-		const doctestPath = "doctest";
-		const filePath = vscode.window.activeTextEditor.document.fileName;
+		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
+		const doctestPath = "doctest";															// Retrieve path for the doctest module
+		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
+
+		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
 
 		console.log("Running doctest");
 		console.log("Python path: '" + pythonPath + "'");
 		console.log("Doctest path: '" + doctestPath + "'");
-		console.log("File path: '" + filePath + "'\n");
+		console.log("File path: '" + filePath + "'");
+		console.log("Formatted command: \n'" + doctestCommand + "'\n");
 
-		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;
-		terminal.sendText(doctestCommand);
+		vscode.window.activeTextEditor.document.save();		// Save document before doctest is run
+		terminal.sendText(doctestCommand);					// Send command to the terminal
 	} else {
 		vscode.window.showErrorMessage("DoctestBtn Error: 'No active text editor'");
 	}
