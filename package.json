@@ -20,8 +20,26 @@
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
-					"light": "./assets/ico_light_wBlue.png",
-					"dark": "./assets/ico_dark_wBlue.png"
+					"light": "./assets/icoSvg_light_wBlue.svg",
+					"dark": "./assets/icoSvg_dark_wBlue.svg"
+				}
+			},
+			{
+				"command": "doctestbtn.execDoctest2",
+				"title": "Doctest Python File in Terminal",
+				"category": "Doctest",
+				"icon": {
+					"light": "./assets/icoSvg_light_fullColor.svg",
+					"dark": "./assets/icoSvg_dark_fullColor.svg"
+				}
+			},
+			{
+				"command": "doctestbtn.execDoctest3",
+				"title": "Doctest Python File in Terminal",
+				"category": "Doctest",
+				"icon": {
+					"light": "./assets/icoSvg_light_plain.svg",
+					"dark": "./assets/icoSvg_dark_plain.svg"
 				}
 			}
 		],
@@ -38,6 +56,16 @@
 				  "when": "editorLangId == python",
 				  "command": "doctestbtn.execDoctest",
 				  "group": "1_run"
+				},
+				{
+					"when": "editorLangId == python",
+					"command": "doctestbtn.execDoctest2",
+					"group": "1_run"
+				},
+				{
+					"when": "editorLangId == python",
+					"command": "doctestbtn.execDoctest3",
+					"group": "1_run"
 				}
 			  ]
 		}
