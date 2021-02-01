@@ -10,40 +10,46 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 
 	console.log('DoctestBtn active');
-	var iconType = vscode.workspace.getConfiguration('doctestbtn').iconColors; // needs changed to reflect boolean
-	console.log("Icon Type: '" + iconType + "'\n");
+
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('doctestbtn.execDoctest_' + iconType, () => {
-		// The code you place here will be executed every time your command is executed
-		
-		const terminals = vscode.window.terminals;							// Get list of active terminals
 
-		if (findTerminal("Python") > -1) {									// If a "Python" terminal exists:
-			const pyTerminal = terminals[findTerminal("Python")];			// Get index
-			pyTerminal.show();												// Force show to user
-			execDoctest(pyTerminal);										// Execute doctest
+	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestExecuter());
+	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		// Initialize each command
+	let xtraFancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_xtraFancy', () => doctestExecuter());
 
-		} else if (findTerminal("Doctest") > -1) {							// Next check for "Doctest" terminal
-			const docTerminal = terminals[findTerminal("Doctest")];    	 	// If exists: get index
-			docTerminal.show();												// Force show to user
-			execDoctest(docTerminal);										// Execute doctest
+	context.subscriptions.push(plainButton);
+	context.subscriptions.push(fancyButton);		// Push each button
+	context.subscriptions.push(xtraFancyButton);
+}
 
-		} else if (vscode.window.activeTerminal) {							// If neither exists check for any active terminal
-			const activeTerminal = vscode.window.activeTerminal;			// If one is running:
-			activeTerminal.show();											// Force show to user
-			execDoctest(activeTerminal);									// Execute doctest
+function doctestExecuter() {
+	// The code you place here will be executed every time your command is executed
+	
+	const terminals = vscode.window.terminals;							// Get list of active terminals
 
-		} else {															// If no active terminal exists:
-			const docTerminal = vscode.window.createTerminal(`Doctest`);	// Open "Doctest" terminal
-			docTerminal.show();												// Force show to user
-			execDoctest(docTerminal);										// Execute doctest
-		}
+	if (findTerminal("Python") > -1) {									// If a "Python" terminal exists:
+		const pyTerminal = terminals[findTerminal("Python")];			// Get index
+		pyTerminal.show();												// Force show to user
+		execDoctest(pyTerminal);										// Execute doctest
 
-	});
+	} else if (findTerminal("Doctest") > -1) {							// Next check for "Doctest" terminal
+		const docTerminal = terminals[findTerminal("Doctest")];    	 	// If exists: get index
+		docTerminal.show();												// Force show to user
+		execDoctest(docTerminal);										// Execute doctest
 
-	context.subscriptions.push(disposable);
+	} else if (vscode.window.activeTerminal) {							// If neither exists check for any active terminal
+		const activeTerminal = vscode.window.activeTerminal;			// If one is running:
+		activeTerminal.show();											// Force show to user
+		execDoctest(activeTerminal);									// Execute doctest
+
+	} else {															// If no active terminal exists:
+		const docTerminal = vscode.window.createTerminal(`Doctest`);	// Open "Doctest" terminal
+		docTerminal.show();												// Force show to user
+		execDoctest(docTerminal);										// Execute doctest
+	}
+
 }
 
 function findTerminal(termName: String): number {
