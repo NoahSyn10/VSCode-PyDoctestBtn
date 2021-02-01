@@ -1,14 +1,24 @@
 {
-	"name": "doctestbtn",
-	"displayName": "Doctest-Button",
-	"description": "",
-	"version": "0.0.1",
+	"name": "python-doctestbtn",
+	"displayName": "Python DoctestBtn",
+	"version": "1.0.0",
+	"publisher": "",
+	"description": "An extension VSCode extension for Python that adds a button to run doctests in the terminal.",
+	"author": {
+		"name": "Noah Synowiec"
+	},
 	"engines": {
 		"vscode": "^1.52.0"
 	},
 	"categories": [
+		"Programming Languages",
 		"Other"
 	],
+	"icon": "assets/icon_512px.png",
+	"galleryBanner": {
+		"color": "#2b2b2b",
+		"theme": "dark"
+	  },
 	"activationEvents": [
 		"onCommand:doctestbtn.execDoctest_plain",
 		"onCommand:doctestbtn.execDoctest_fancy",
@@ -22,8 +32,8 @@
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
-					"light": "./assets/icoSvg_light_plain.svg",
-					"dark": "./assets/icoSvg_dark_plain.svg"
+					"light": "./assets/images/icoSvg_light_plain.svg",
+					"dark": "./assets/images/icoSvg_dark_plain.svg"
 				}
 			},
 			{
@@ -31,8 +41,8 @@
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
-					"light": "./assets/icoSvg_light_wBlue.svg",
-					"dark": "./assets/icoSvg_dark_wBlue.svg"
+					"light": "./assets/images/icoSvg_light_wBlue.svg",
+					"dark": "./assets/images/icoSvg_dark_wBlue.svg"
 				}
 			},
 			{
@@ -41,8 +51,8 @@
 				"category": "Doctest",
 				"icon": {
 					"when" : "editorLangId == python",
-					"light": "./assets/icoSvg_light_fullColor.svg",
-					"dark": "./assets/icoSvg_dark_fullColor.svg"
+					"light": "./assets/images/icoSvg_light_fullColor.svg",
+					"dark": "./assets/images/icoSvg_dark_fullColor.svg"
 				}
 			}
 		],

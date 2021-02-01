@@ -9,4 +9,5 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
-assets/misc
+assets/~misc
+assets/__pycache__

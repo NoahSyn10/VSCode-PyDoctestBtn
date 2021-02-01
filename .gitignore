@@ -3,4 +3,5 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-assets/misc
+assets/~misc
+assets/__pycache__
