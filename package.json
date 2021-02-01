@@ -10,13 +10,24 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:doctestbtn.execDoctest"
+		"onCommand:doctestbtn.execDoctest_Plain",
+		"onCommand:doctestbtn.execDoctest_oneColor",
+		"onCommand:doctestbtn.execDoctest_twoColor"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "doctestbtn.execDoctest",
+				"command": "doctestbtn.execDoctest_Plain",
+				"title": "Doctest Python File in Terminal",
+				"category": "Doctest",
+				"icon": {
+					"light": "./assets/icoSvg_light_plain.svg",
+					"dark": "./assets/icoSvg_dark_plain.svg"
+				}
+			},
+			{
+				"command": "doctestbtn.execDoctest_oneColor",
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
@@ -25,50 +36,62 @@
 				}
 			},
 			{
-				"command": "doctestbtn.execDoctest2",
+				"command": "doctestbtn.execDoctest_twoColor",
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
+					"when" : "editorLangId == python",
 					"light": "./assets/icoSvg_light_fullColor.svg",
 					"dark": "./assets/icoSvg_dark_fullColor.svg"
-				}
-			},
-			{
-				"command": "doctestbtn.execDoctest3",
-				"title": "Doctest Python File in Terminal",
-				"category": "Doctest",
-				"icon": {
-					"light": "./assets/icoSvg_light_plain.svg",
-					"dark": "./assets/icoSvg_dark_plain.svg"
 				}
 			}
 		],
 		"menus":  {
 			"commandPalette": [
 				{
-					"command": "doctestbtn.execDoctest",
+					"command": "doctestbtn.execDoctest_Plain",
 					"when": "editorLangId == python",
 					"title": "Run Doctest in Terminal"
 				}
 			],
 			"editor/title": [
 				{
-				  "when": "editorLangId == python",
-				  "command": "doctestbtn.execDoctest",
+				  "when": "editorLangId == python && !config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
+				  "command": "doctestbtn.execDoctest_Plain",
 				  "group": "1_run"
 				},
 				{
-					"when": "editorLangId == python",
-					"command": "doctestbtn.execDoctest2",
+					"when": "editorLangId == python && config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
+					"command": "doctestbtn.execDoctest_oneColor",
 					"group": "1_run"
 				},
 				{
-					"when": "editorLangId == python",
-					"command": "doctestbtn.execDoctest3",
+					"when": "editorLangId == python && config.doctestbtn.buttonColor.xtraFancy",
+					"command": "doctestbtn.execDoctest_twoColor",
 					"group": "1_run"
 				}
 			  ]
-		}
+		},
+		"configuration": {
+			"title": "DoctestBtn",
+			"properties": {
+			  "doctestbtn.doctestPath": {
+				"type": "string",
+				"default": "doctest",
+				"description": "Path to doctest module, you can use a custom module by editing this feild."
+			  },
+			  "doctestbtn.buttonColor.fancy": {
+				"type": "boolean",
+				"default": "false",
+				"markdownDescription": "Use black/white + blue button. [Comparison](github.com)"
+			  },
+			  "doctestbtn.buttonColor.xtraFancy": {
+				"type": "boolean",
+				"default": "false",
+				"markdownDescription": "Use orange + blue button. [Comparison](github.com)"
+			  }
+			}
+		  }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

@@ -8,12 +8,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('DoctestBtn active\n');
 
+	console.log('DoctestBtn active');
+	var iconType = vscode.workspace.getConfiguration('doctestbtn').iconColors; // needs changed to reflect boolean
+	console.log("Icon Type: '" + iconType + "'\n");
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('doctestbtn.execDoctest', () => {
+	let disposable = vscode.commands.registerCommand('doctestbtn.execDoctest_' + iconType, () => {
 		// The code you place here will be executed every time your command is executed
 		
 		const terminals = vscode.window.terminals;							// Get list of active terminals
@@ -57,7 +59,7 @@ function findTerminal(termName: String): number {
 function execDoctest(terminal: vscode.Terminal) {
 	if (vscode.window.activeTextEditor) {
 		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
-		const doctestPath = "doctest";															// Retrieve path for the doctest module
+		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
 		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
