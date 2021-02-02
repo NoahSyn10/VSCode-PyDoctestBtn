@@ -2,20 +2,32 @@
 
 DoctestBtn is a simple VSCode extension that aims to replicate the ease of use of the 'run button' included in Microsoft's [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and apply it to running Python [doctests](https://docs.python.org/3/library/doctest.html).
 
-## The Doctest Button
+## Features
+- - -
+### The Doctest Button
 
 * The doctest button mimics the functionality of the Python extension's run button and uses it to run doctests.
 * When clicked:
   * The active document is saved
-  * Focus is brought to the Python terminal (*a terminal is created if neccesary*)
-  * Your preffered Python path is used to doctest the active document
+  * Focus is brought to the terminal (*a terminal is created if necessary*)
+  * Your preferred Python path is used to doctest the active document
 
-  * <img src=assets/example/ExampleGif.gif width="750">
+       <img src=assets/example/ExampleGif.gif width="750">
 
-## Requirements
+### Button Icon Options
 
-* Requires the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) to retrieve the Python path preference
-* Requires [Python](https://www.python.org/) (the language it's made for)
+* There are three options for the style of the doctest button
+  * 'Plain'
+  * 'Fancy'
+  * 'Xtra Fancy'
+    ##### *Named for their alphabetical order
+    
+  <img src=assets/example/BtnComparison.png width="250">
+
+* The preferred icon can be chosen using two boolean configurations in user settings
+  * Turning on 'Xtra Fancy' overrides 'Fancy' regardless of its state
+  
+- - -
 
 ## Extension Settings
 
@@ -25,11 +37,19 @@ This extension contributes the following settings:
   * Choose to use the 'Fancy' themed button
 * `doctestbtn.buttonColor.xtraFancy`: 
   * Choose to use the 'Xtra Fancy' theme button
-  * ***Overrides `doctestbtn.buttonColor.fancy`***
+  * ***Overrides `'fancy'` theme***
 * `doctestbtn.doctestPath`: 
   * Change the path to the doctest module
+  
 
----
+- - -
+
+## Requirements
+
+* Requires the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) to retrieve the Python path preference
+* Requires [Python](https://www.python.org/) (the language it's made for)
+
+- - -
 
 ## Known Issues
 

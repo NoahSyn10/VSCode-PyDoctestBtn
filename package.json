@@ -96,12 +96,12 @@
 			  "doctestbtn.buttonColor.fancy": {
 				"type": "boolean",
 				"default": "false",
-				"markdownDescription": "Use black/white + blue button. [Comparison](https://github.com/NoahSyn10/VSCode_DoctestBtn/blob/main/assets/BtnComparison.png)"
+				"markdownDescription": "Use black/white + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
 			  },
 			  "doctestbtn.buttonColor.xtraFancy": {
 				"type": "boolean",
 				"default": "false",
-				"markdownDescription": "Use orange + blue button. [Comparison](https://github.com/NoahSyn10/VSCode_DoctestBtn/blob/main/assets/BtnComparison.png)"
+				"markdownDescription": "Use orange + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
 			  },
 			  "doctestbtn.doctestPath": {
 				"type": "string",
