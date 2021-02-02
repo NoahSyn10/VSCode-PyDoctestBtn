@@ -13,7 +13,8 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
   * Your preferred Python path is used to doctest the active document
 
        <img src=assets/example/ExampleGif.gif width="750">
-
+      
+      ##### GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ### Button Icon Options
 
 * There are three options for the style of the doctest button
@@ -47,7 +48,7 @@ This extension contributes the following settings:
 ## Requirements
 
 * Requires the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) to retrieve the Python path preference
-* Requires [Python](https://www.python.org/) (the language it's made for)
+* Requires the [Python](https://www.python.org/) programming language
 
 - - -
 
