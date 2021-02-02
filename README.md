@@ -1,3 +1,5 @@
+<div © 2021 Noah Synowiec noahsyn1@gmail.com></div>
+
 # DoctestBtn README
 
 DoctestBtn is a simple VSCode extension that aims to replicate the ease of use of the 'run button' included in Microsoft's [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and apply it to running Python [doctests](https://docs.python.org/3/library/doctest.html).
@@ -54,7 +56,7 @@ This extension contributes the following settings:
 
 ## To Do
 
-* [x] Implement Doctest Detection
+* [ ] Implement Doctest Detection
   * Detect doctests in python files
   * Only show button when doctests are present
   * Show number of tests found in status bar

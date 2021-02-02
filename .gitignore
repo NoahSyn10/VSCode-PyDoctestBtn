@@ -4,4 +4,5 @@ node_modules
 .vscode-test/
 *.vsix
 assets/~misc
-assets/__pycache__
+assets/example/__pycache__
+vsc-extension-quickstart.md

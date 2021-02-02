@@ -4,10 +4,11 @@ out/test/**
 src/**
 .gitignore
 .yarnrc
+.py
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
 assets/~misc
-assets/__pycache__
+assets/example/__pycache__
