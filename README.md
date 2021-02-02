@@ -14,7 +14,7 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
   * Focus is brought to the terminal (*a terminal is created if necessary*).
   * Your preferred Python path is used to doctest the active document.
 
-       <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/ExampleGif.gif width="750">
+       <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/ExampleGif.gif width="600">
       
       ##### GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
