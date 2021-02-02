@@ -3,23 +3,19 @@
 
 import math
 
-def pothagoreanTheorem(a, b):
+def pythagoreanTheorem(a, b):
     """
-    >>> pothagoreanTheorem(3, 4)
-    5.0
-    """
-    return math.sqrt(a**2 + b**2)
+    Uses the pythagorean a^2 + b^2 = c^2 on inputs 'a' and 'b'
 
-def reverseDict(aDict):
+    >>> pythagoreanTheorem(3, 4)
+    5.0
+    >>> pythagoreanTheorem(6.0, 8.0)
+    10.0
+    >>> pythagoreanTheorem(12.45, 16.32)
+    20.5267
+    >>> pythagoreanTheorem("Foo", 9) is None
+    True
     """
-    />>> a = {"Apples" : "Tree", "Carrots" : "Ground", "Oranges" : "Tree"}
-    />>> reverseDict(a)
-    {'Tree': ['Apples', 'Oranges'], 'Ground': ['Carrots']}
-    """
-    reversedDict = {}
-    for key in aDict:
-        if aDict[key] not in reversedDict:
-            reversedDict[aDict[key]] = [key]
-        else:
-            reversedDict[aDict[key]].append(key)
-    return reversedDict
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        return None
+    return round(math.sqrt(a**2 + b**2), 4)
