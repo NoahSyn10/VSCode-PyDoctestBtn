@@ -69,6 +69,8 @@ This extension contributes the following settings:
   * Only show button when doctests are present.
   * Show number of tests found in status bar.
     * Maybe show tests passed/failed?
+* [ ] Add command structure setting.
+  * Would allow you to change the structure of the command sent during doctest execution
 
 - - -
 ## Known Issues
