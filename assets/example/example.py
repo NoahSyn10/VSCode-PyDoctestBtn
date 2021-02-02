@@ -1,5 +1,5 @@
-#A simple example file containing two functionins and proper doctests
-#Author: Noah S.
+# A simple example function containing proper doctests
+# Author: Noah S.
 
 import math
 
