@@ -73,8 +73,9 @@ N/A
 
 * Initial release of DoctestBtn
 * Introduced:
-  * The doctest button
-  * Three button 'themes'
-  * Three related settings
+  * 'Doctest Python File in Terminal' command.
+  * The doctest button (maps to the command).
+  * Three button 'themes'.
+  * Three related settings.
 
 ---
