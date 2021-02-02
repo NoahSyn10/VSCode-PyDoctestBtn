@@ -52,6 +52,15 @@ This extension contributes the following settings:
 
 - - -
 
+## To Do
+
+* [x] Implement Doctest Detection
+  * Detect doctests in python files
+  * Only show button when doctests are present
+  * Show number of tests found in status bar
+    * Maybe show tests passed/failed?
+
+- - -
 ## Known Issues
 
 N/A
