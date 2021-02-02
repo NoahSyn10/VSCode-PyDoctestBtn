@@ -14,7 +14,7 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
   * Focus is brought to the terminal (*a terminal is created if necessary*)
   * Your preferred Python path is used to doctest the active document
 
-       <img src=assets/example/ExampleGif.gif width="750">
+       <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/ExampleGif.gif width="750">
       
       ##### GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ### Button Icon Options
@@ -25,7 +25,7 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
   * 'Xtra Fancy'
     ##### *Named for their alphabetical order
     
-  <img src=assets/example/BtnComparison.png width="250">
+  <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png width="250">
 
 * The preferred icon can be chosen using two boolean configurations in user settings
   * Turning on 'Xtra Fancy' overrides 'Fancy' regardless of its state
@@ -69,8 +69,7 @@ N/A
 
 ## Release Notes
 
-### v1.0.0 
-##### - 02/01/21
+### v1.0.0 - 2021-02-02
 
 * Initial release of DoctestBtn
 * Introduced:

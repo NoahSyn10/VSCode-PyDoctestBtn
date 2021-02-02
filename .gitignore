@@ -6,3 +6,4 @@ node_modules
 assets/~misc
 assets/example/__pycache__
 vsc-extension-quickstart.md
+~packaged
