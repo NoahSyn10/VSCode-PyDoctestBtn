@@ -19,3 +19,7 @@ def pythagoreanTheorem(a, b):
     if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
         return None
     return round(math.sqrt(a**2 + b**2), 4)
+
+
+
+    
