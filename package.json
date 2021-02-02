@@ -58,7 +58,6 @@
 				"title": "Doctest Python File in Terminal",
 				"category": "Doctest",
 				"icon": {
-					"when" : "editorLangId == python",
 					"light": "./assets/images/icoSvg_light_fullColor.svg",
 					"dark": "./assets/images/icoSvg_dark_fullColor.svg"
 				}
@@ -69,7 +68,17 @@
 				{
 					"command": "doctestbtn.execDoctest_plain",
 					"when": "editorLangId == python",
-					"title": "Run Doctest in Terminal"
+					"title": "Doctest Python File in Terminal"
+				},
+				{
+					"command": "doctestbtn.execDoctest_fancy",
+					"when": "None",
+					"title": "Doctest Python File in Terminal"
+				},
+				{
+					"command": "doctestbtn.execDoctest_xtraFancy",
+					"when": "None",
+					"title": "Doctest Python File in Terminal"
 				}
 			],
 			"editor/title": [
