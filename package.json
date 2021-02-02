@@ -2,7 +2,7 @@
 	"name": "pydoctestbtn",
 	"displayName": "Python DoctestBtn",
 	"version": "1.0.0",
-	"publisher": "",
+	"publisher": "NoahSyn10",
 	"description": "Python DoctestBtn - a simple extension that aims to make running Python Doctests as easy as clicking a button.",
 	"author": {
 		"name": "Noah Synowiec"
