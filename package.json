@@ -1,12 +1,20 @@
 {
-	"name": "python-doctestbtn",
+	"name": "pydoctestbtn",
 	"displayName": "Python DoctestBtn",
 	"version": "1.0.0",
 	"publisher": "",
-	"description": "An extension VSCode extension for Python that adds a button to run doctests in the terminal.",
+	"description": "Python DoctestBtn - a simple extension that aims to make running Python Doctests as easy as clicking a button.",
 	"author": {
 		"name": "Noah Synowiec"
 	},
+	"bugs": {
+		"url": "https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/NoahSyn10/VSCode-PyDoctestBtn"
+	},
+	"homepage": "https://github.com/NoahSyn10/VSCode-PyDoctestBtn/blob/main/README.md",
 	"engines": {
 		"vscode": "^1.52.0"
 	},
@@ -14,7 +22,7 @@
 		"Programming Languages",
 		"Other"
 	],
-	"icon": "assets/icon_512px.png",
+	"icon": "assets/images/icon_512px.png",
 	"galleryBanner": {
 		"color": "#2b2b2b",
 		"theme": "dark"
