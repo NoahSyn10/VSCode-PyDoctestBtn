@@ -33,7 +33,7 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
 
 ### `execDoctest` Command
 
-* Can be found in commands under "Execute Python File in Terminal" when a .py file is in focus.
+* Can be found in command pallate under "Execute Python File in Terminal" when a .py file is in focus.
   * Saves active document.
   * Focus is brought to the terminal (*a terminal is created if necessary*).
   * Your preferred Python and Doctest paths are used to doctest the active document.
