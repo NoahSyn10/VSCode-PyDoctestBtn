@@ -10,25 +10,33 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
 
 * The doctest button mimics the functionality of the Python extension's run button and uses it to run doctests.
 * When clicked:
-  * The active document is saved
-  * Focus is brought to the terminal (*a terminal is created if necessary*)
-  * Your preferred Python path is used to doctest the active document
+  * The active document is saved.
+  * Focus is brought to the terminal (*a terminal is created if necessary*).
+  * Your preferred Python path is used to doctest the active document.
 
        <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/ExampleGif.gif width="750">
       
       ##### GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
 ### Button Icon Options
 
-* There are three options for the style of the doctest button
+* There are three options for the style of the doctest button:
   * 'Plain'
   * 'Fancy'
   * 'Xtra Fancy'
-    ##### *Named for their alphabetical order
+    ##### *Named for their alphabetical order.
     
   <img src=https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png width="250">
 
-* The preferred icon can be chosen using two boolean configurations in user settings
-  * Turning on 'Xtra Fancy' overrides 'Fancy' regardless of its state
+* The preferred icon can be chosen using two boolean configurations in user settings.
+  * Turning on 'Xtra Fancy' overrides 'Fancy' regardless of its state.
+
+### `execDoctest` Command
+
+* Can be found in commands under "Execute Python File in Terminal" when a .py file is in focus.
+  * Saves active document.
+  * Focus is brought to the terminal (*a terminal is created if necessary*).
+  * Your preferred Python and Doctest paths are used to doctest the active document.
   
 - - -
 
@@ -37,29 +45,29 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
 This extension contributes the following settings:
 
 * `doctestbtn.buttonColor.fancy`: 
-  * Choose to use the 'Fancy' themed button
+  * Choose to use the 'Fancy' themed button.
 * `doctestbtn.buttonColor.xtraFancy`: 
-  * Choose to use the 'Xtra Fancy' theme button
-  * ***Overrides `'fancy'` theme***
+  * Choose to use the 'Xtra Fancy' theme button.
+  * ***Overrides `'fancy'` theme.***
 * `doctestbtn.doctestPath`: 
-  * Change the path to the doctest module
+  * Change the path to the doctest module.
   
 
 - - -
 
 ## Requirements
 
-* Requires the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) to retrieve the Python path preference
-* Requires the [Python](https://www.python.org/) programming language
+* Requires the [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) to retrieve the Python path preference.
+* Requires the [Python](https://www.python.org/) programming language.
 
 - - -
 
 ## To Do
 
-* [ ] Implement Doctest Detection
-  * Detect doctests in python files
-  * Only show button when doctests are present
-  * Show number of tests found in status bar
+* [ ] Implement Doctest Detection.
+  * Detect doctests in python files.
+  * Only show button when doctests are present.
+  * Show number of tests found in status bar.
     * Maybe show tests passed/failed?
 
 - - -
@@ -71,7 +79,7 @@ N/A
 
 ### v1.0.0 - 2021-02-02
 
-* Initial release of DoctestBtn
+* Initial release of DoctestBtn.
 * Introduced:
   * 'Doctest Python File in Terminal' command.
   * The doctest button (maps to the command).
