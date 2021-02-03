@@ -1,6 +1,8 @@
 // PyDoctestBtn
 // © 2021 Noah Synowiec noahsyn1@gmail.com
 
+import { fstat } from 'fs';
+import { eventNames } from 'process';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
@@ -23,20 +25,29 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(plainButton);
 	context.subscriptions.push(fancyButton);		// Push each button
 	context.subscriptions.push(xtraFancyButton);
+	
+	let typeListener = vscode.workspace.onDidChangeTextDocument((docChangeEvent: vscode.TextDocumentChangeEvent) => doctestDetector(docChangeEvent));	// Initialize typeListener event
 
-	let onPythonFile = vscode.commands.registerCommand('onLanguage', () => doctestDetector()); // Initialize onPythonFile event
-
-	context.subscriptions.push(onPythonFile);		// Push event
+	context.subscriptions.push(typeListener);
 }
 
-function doctestDetector() {
+function doctestDetector(docChangeEvent: vscode.TextDocumentChangeEvent) {
 	/*
 	Searches for doctests in the open file and counts them if present.
 	Returns the number of doctests in the active file.
 	*/
-	if (vscode.window.activeTextEditor) {
-		const fileText = vscode.window.activeTextEditor.document.getText;
-		
+	if (docChangeEvent.document === vscode.window.activeTextEditor?.document) {
+		const docText = vscode.window.activeTextEditor.document.getText();
+		console.log('text:' + docText);
+
+		for(var i = 0; i < docChangeEvent.contentChanges.length; i++) {
+			const change = docChangeEvent.contentChanges[i];
+			
+			
+			//for(var s = 0; s < docText.length; s++) {
+			//	console.log(docText[s]);
+			//}
+		}
 	}
 }
 
@@ -48,7 +59,7 @@ function doctestExecuter() {
 	- 'Doctest'
 	- Any other open terminal
 	*/
-	
+
 	const terminals = vscode.window.terminals;							// Get list of active terminals
 
 	if (findTerminal("Python") > -1) {									// If a "Python" terminal exists:
@@ -116,5 +127,5 @@ function execDoctest(terminal: vscode.Terminal) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
 
