@@ -34,7 +34,8 @@
 	"activationEvents": [
 		"onCommand:doctestbtn.execDoctest_plain",
 		"onCommand:doctestbtn.execDoctest_fancy",
-		"onCommand:doctestbtn.execDoctest_xtraFancy"
+		"onCommand:doctestbtn.execDoctest_xtraFancy",
+		"onLanguage:python"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

@@ -23,10 +23,31 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(plainButton);
 	context.subscriptions.push(fancyButton);		// Push each button
 	context.subscriptions.push(xtraFancyButton);
+
+	let onPythonFile = vscode.commands.registerCommand('onLanguage', () => doctestDetector()); // Initialize onPythonFile event
+
+	context.subscriptions.push(onPythonFile);		// Push event
+}
+
+function doctestDetector() {
+	/*
+	Searches for doctests in the open file and counts them if present.
+	Returns the number of doctests in the active file.
+	*/
+	if (vscode.window.activeTextEditor) {
+		const fileText = vscode.window.activeTextEditor.document.getText;
+		
+	}
 }
 
 function doctestExecuter() {
-	// The code you place here will be executed every time your command is executed
+	/*
+	Brings focus to a terminal with highest 'priority', and creates one if none exists.
+	Priority levels by terminal name:
+	- 'Python'
+	- 'Doctest'
+	- Any other open terminal
+	*/
 	
 	const terminals = vscode.window.terminals;							// Get list of active terminals
 
@@ -54,6 +75,11 @@ function doctestExecuter() {
 }
 
 function findTerminal(termName: String): number {
+	/*
+	Searches for an open terminal with the given 'termName' as its name.
+	Returns the index of the terminal if found, -1 otherwise.
+	*/
+
 	const terminals = vscode.window.terminals;			// Get list of active terminals
 	for (let i = 0; i < terminals.length; i++) {
 		if (terminals[i].name === termName) {			// Check each list for provided name
@@ -64,6 +90,11 @@ function findTerminal(termName: String): number {
 }
 
 function execDoctest(terminal: vscode.Terminal) {
+	/*
+	'terminal' is a vscode terminal object.
+	Runs a doctest inside of the provided terminal object.
+	*/
+
 	if (vscode.window.activeTextEditor) {
 		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
 		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
