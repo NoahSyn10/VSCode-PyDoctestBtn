@@ -4,7 +4,6 @@ out/test/**
 src/**
 .gitignore
 .yarnrc
-.py
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
@@ -12,3 +11,4 @@ vsc-extension-quickstart.md
 **/*.ts
 assets/~misc
 assets/example/__pycache__
+assets/example/example.py
