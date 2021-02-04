@@ -6,18 +6,13 @@ import { eventNames } from 'process';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+// your extension is activated the very first time an activationEvent is triggered
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
+	// This block of code will only be executed once when your extension is activated
 
 	console.log('DoctestBtn active');
-	doctestDetector(vscode.window.activeTextEditor);
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
+	doctestDetector(vscode.window.activeTextEditor);	// Count doctests on activation.
 
 	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestExecuter());
 	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		// Initialize each command
@@ -28,10 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(xtraFancyButton);
 	
 	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestDetector(vscode.window.activeTextEditor));	
-	context.subscriptions.push(docEditListener);		// Init and push text doc listener.
+	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 
 	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestDetector(newTextEditor));
-	context.subscriptions.push(editorSwitchListener);	// Init and push active editor change listener.
+	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 
 	
 	/*
@@ -44,8 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 	/*
-	Searches for doctests in the open file and counts them if present.
-	Returns the number of doctests in the active file.
+	Searches the active document for valid doctests.
+	Returns the number of valid docstrings and doctests in the active file.
 	*/
 	if (activeEditor?.document.languageId === "python") {
 		const doc = activeEditor.document;
@@ -54,25 +49,26 @@ function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 		var totalDocstrings = 0;
 		var totaldocTests = 0;
 
-		for (var i = 0; i < doc.lineCount; i++) {
-			const line = doc.lineAt(i);
+		for (var i = 0; i < doc.lineCount; i++) {						// Iterate through each line of text in the active doc
+			const line = doc.lineAt(i);		
 
-			if (!line.isEmptyOrWhitespace) {
-				const txtIndex = line.firstNonWhitespaceCharacterIndex;
-				const text = line.text.slice(txtIndex);
+			if (!line.isEmptyOrWhitespace) {												// Ignore if whitespace
+				const txtIndex = line.firstNonWhitespaceCharacterIndex;	
+				const text = line.text.slice(txtIndex);										// Ignore whitespace up to first character
 
-				if (text.slice(0,3) === '"""' && tripleSingleQuotes % 2 === 0) {
+				if (text.slice(0,3) === '"""' && tripleSingleQuotes % 2 === 0) {			// Count """ if not in ''' docstring
 					tripleDoubleQuotes++;
 
-				} else if (text.slice(0,3) === "'''" && tripleDoubleQuotes % 2 === 0) {
+				} else if (text.slice(0,3) === "'''" && tripleDoubleQuotes % 2 === 0) {		// Count ''' if not in """ docstring
 					tripleSingleQuotes++;
 
-				} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {
-					totaldocTests++;
+				} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && 		// Count >>> if followed by a space and a 
+						  (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
+					totaldocTests++;														
 				}
 			}
 		}
-		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);
+		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);	// Total docstrings = sum of floor division of total ''' and """ instances
 
 		console.log("Total Docstrings: " + totalDocstrings);
 		console.log("Total Doctests: " + totaldocTests);
