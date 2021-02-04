@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This block of code will only be executed once when your extension is activated
 
 	console.log('DoctestBtn active');
-	doctestDetector(vscode.window.activeTextEditor);	// Count doctests on activation.
+	doctestHandler(vscode.window.activeTextEditor);	// Count doctests on activation.
 
 	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestExecuter());
 	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		// Initialize each command
@@ -22,10 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(fancyButton);		// Push each button
 	context.subscriptions.push(xtraFancyButton);
 	
-	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestDetector(vscode.window.activeTextEditor));	
+	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestHandler(vscode.window.activeTextEditor));	
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 
-	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestDetector(newTextEditor));
+	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestHandler(newTextEditor));
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 
 	
@@ -37,17 +37,31 @@ export function activate(context: vscode.ExtensionContext) {
 	*/
 }
 
+function doctestHandler(activeEditor: vscode.TextEditor | undefined) {
+	/*
+	Get data on doctests in file and update menu and status bar accordingly
+	*/
+	const docData = doctestDetector(activeEditor);
+
+	if (docData.totalDoctests > 0) {
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
+	} else {
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
+	}
+}
+
 function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 	/*
 	Searches the active document for valid doctests.
 	Returns the number of valid docstrings and doctests in the active file.
 	*/
+	var tripleDoubleQuotes = 0; 
+	var tripleSingleQuotes = 0; 
+	var totalDocstrings = 0;
+	var totaldocTests = 0;
+
 	if (activeEditor?.document.languageId === "python") {
 		const doc = activeEditor.document;
-		var tripleDoubleQuotes = 0; 
-		var tripleSingleQuotes = 0; 
-		var totalDocstrings = 0;
-		var totaldocTests = 0;
 
 		for (var i = 0; i < doc.lineCount; i++) {						// Iterate through each line of text in the active doc
 			const line = doc.lineAt(i);		
@@ -69,10 +83,11 @@ function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 			}
 		}
 		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);	// Total docstrings = sum of floor division of total ''' and """ instances
-
-		console.log("Total Docstrings: " + totalDocstrings);
-		console.log("Total Doctests: " + totaldocTests);
 	}
+	return {
+		"totalDocstrings": totalDocstrings,
+		"totalDoctests": totaldocTests
+	};
 }
 
 function doctestExecuter() {
