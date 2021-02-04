@@ -13,6 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 
 	console.log('DoctestBtn active');
+	doctestDetector(vscode.window.activeTextEditor);
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -26,34 +27,62 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(fancyButton);		// Push each button
 	context.subscriptions.push(xtraFancyButton);
 	
-	let typeListener = vscode.workspace.onDidChangeTextDocument((docChangeEvent: vscode.TextDocumentChangeEvent) => doctestDetector(docChangeEvent));	// Initialize typeListener event
+	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestDetector(vscode.window.activeTextEditor));	
+	context.subscriptions.push(docEditListener);		// Init and push text doc listener.
 
-	context.subscriptions.push(typeListener);
+	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestDetector(newTextEditor));
+	context.subscriptions.push(editorSwitchListener);	// Init and push active editor change listener.
+
+	
+	/*
+	var showBtn = vscode.workspace.getConfiguration('doctestbtn').showButton;
+	console.log('Show Button: ' + showBtn);
+			
+	vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
+	*/
 }
 
-function doctestDetector(docChangeEvent: vscode.TextDocumentChangeEvent) {
+function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 	/*
 	Searches for doctests in the open file and counts them if present.
 	Returns the number of doctests in the active file.
 	*/
-	if (docChangeEvent.document === vscode.window.activeTextEditor?.document) {
-		const docText = vscode.window.activeTextEditor.document.getText();
-		console.log('text:' + docText);
+	if (activeEditor?.document.languageId === "python") {
+		const doc = activeEditor.document;
+		var tripleDoubleQuotes = 0; 
+		var tripleSingleQuotes = 0; 
+		var totalDocstrings = 0;
+		var totaldocTests = 0;
 
-		for(var i = 0; i < docChangeEvent.contentChanges.length; i++) {
-			const change = docChangeEvent.contentChanges[i];
-			
-			
-			//for(var s = 0; s < docText.length; s++) {
-			//	console.log(docText[s]);
-			//}
+		for (var i = 0; i < doc.lineCount; i++) {
+			const line = doc.lineAt(i);
+
+			if (!line.isEmptyOrWhitespace) {
+				const txtIndex = line.firstNonWhitespaceCharacterIndex;
+				const text = line.text.slice(txtIndex);
+
+				if (text.slice(0,3) === '"""' && tripleSingleQuotes % 2 === 0) {
+					tripleDoubleQuotes++;
+
+				} else if (text.slice(0,3) === "'''" && tripleDoubleQuotes % 2 === 0) {
+					tripleSingleQuotes++;
+
+				} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {
+					totaldocTests++;
+				}
+			}
 		}
+		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);
+
+		console.log("Total Docstrings: " + totalDocstrings);
+		console.log("Total Doctests: " + totaldocTests);
 	}
 }
 
 function doctestExecuter() {
 	/*
 	Brings focus to a terminal with highest 'priority', and creates one if none exists.
+	Executes doctest in active terminal using execDoctest().
 	Priority levels by terminal name:
 	- 'Python'
 	- 'Doctest'
