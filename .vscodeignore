@@ -9,6 +9,8 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+__pycache__/**
 assets/~misc
 assets/example/__pycache__
 assets/example/example.py
+assets/.vscode
