@@ -1,3 +1,4 @@
 {
-    "doctestbtn.showButton": true
+    "doctestbtn.showButton": false,
+    "cSpell.enabled": false
 }

@@ -5,6 +5,9 @@ import { fstat } from 'fs';
 import { eventNames } from 'process';
 import * as vscode from 'vscode';
 
+let doctestStatus: vscode.StatusBarItem;	
+let docstringStatus: vscode.StatusBarItem;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time an activationEvent is triggered
 export function activate(context: vscode.ExtensionContext) {
@@ -12,32 +15,28 @@ export function activate(context: vscode.ExtensionContext) {
 	// This block of code will only be executed once when your extension is activated
 
 	console.log('DoctestBtn active');
-	doctestHandler(vscode.window.activeTextEditor);	// Count doctests on activation.
 
 	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestExecuter());
 	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		// Initialize each command
 	let xtraFancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_xtraFancy', () => doctestExecuter());
-
 	context.subscriptions.push(plainButton);
 	context.subscriptions.push(fancyButton);		// Push each button
 	context.subscriptions.push(xtraFancyButton);
 	
 	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestHandler(vscode.window.activeTextEditor));	
-	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
-
 	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestHandler(newTextEditor));
+	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 
-	
-	/*
-	var showBtn = vscode.workspace.getConfiguration('doctestbtn').showButton;
-	console.log('Show Button: ' + showBtn);
-			
-	vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-	*/
+	doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);	
+	docstringStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);	
+	context.subscriptions.push(doctestStatus);			// Create doctest counter status bar item
+	context.subscriptions.push(docstringStatus);		// Create docstring counter status bar item
+
+	doctestHandler(vscode.window.activeTextEditor);	// Count doctests on activation.
 }
 
-function doctestHandler(activeEditor: vscode.TextEditor | undefined) {
+function doctestHandler(activeEditor: vscode.TextEditor | undefined): void {
 	/*
 	Get data on doctests in file and update menu and status bar accordingly
 	*/
@@ -45,8 +44,17 @@ function doctestHandler(activeEditor: vscode.TextEditor | undefined) {
 
 	if (docData.totalDoctests > 0) {
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
+
+		doctestStatus.text = "Doctests: " + docData.totalDoctests;
+		docstringStatus.text = "Docstrings: " + docData.totalDocstrings;
+		doctestStatus.show();
+		docstringStatus.show();
+
 	} else {
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
+
+		doctestStatus.hide();
+		docstringStatus.hide();
 	}
 }
 
