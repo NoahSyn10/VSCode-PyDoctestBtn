@@ -1,8 +1,5 @@
 """
->> not a doctest
->>>not a doctest
-a>>> not a doctest
+>>> a
+2
+
 """
-
->>> not a doctest
-
