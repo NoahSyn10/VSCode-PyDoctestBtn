@@ -7,23 +7,30 @@ import * as vscode from 'vscode';
 
 let doctestStatus: vscode.StatusBarItem;	
 let docstringStatus: vscode.StatusBarItem;
+let extOutput: vscode.OutputChannel;
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time an activationEvent is triggered
 export function activate(context: vscode.ExtensionContext) {
+	/*
+	Executes once upon activation of extension.
+	Initializes elements and listeners.
+	*/
+	extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
 
-	// This block of code will only be executed once when your extension is activated
-
-	console.log('DoctestBtn active');
+	console.log('DoctestBtn active/n');
+	extOutput.appendLine("> DoctestBtn active");
 
 	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestExecuter());
-	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		// Initialize each command
+	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestExecuter());		
 	let xtraFancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_xtraFancy', () => doctestExecuter());
 	context.subscriptions.push(plainButton);
-	context.subscriptions.push(fancyButton);			// Push each button
+	context.subscriptions.push(fancyButton);			// Initialize each button command (one for each 'style')
 	context.subscriptions.push(xtraFancyButton);
 	
-	let docEditListener = vscode.workspace.onDidChangeTextDocument(() => doctestHandler(vscode.window.activeTextEditor));	
+	// Calls too often for some reason
+	let docEditListener = vscode.workspace.onDidChangeTextDocument((docChange: vscode.TextDocumentChangeEvent) => doctestHandler(vscode.window.activeTextEditor, docChange));	
 	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestHandler(newTextEditor));
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
@@ -36,25 +43,33 @@ export function activate(context: vscode.ExtensionContext) {
 	doctestHandler(vscode.window.activeTextEditor);		// Count doctests on activation.
 }
 
-function doctestHandler(activeEditor: vscode.TextEditor | undefined): void {
+function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
 	/*
 	Get data on doctests in file and update menu and status bar accordingly
 	*/
+	if (docChange?.document.fileName !== activeEditor?.document.fileName) {
+		return;																				// Check if change was in the active editor.
+	}
+		
 	const docData = doctestDetector(activeEditor);
 
-	if (docData.totalDoctests > 0) {
+	extOutput.appendLine("> Scanning file for doctests");
+
+	if (docData?.totalDoctests > 0) {														// If there are doctests, show button and status bar items.
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
 
 		doctestStatus.text = "Doctests: " + docData.totalDoctests;
-		//docstringStatus.text = "Docstrings: " + docData.totalDocstrings;
 		doctestStatus.show();
-		//docstringStatus.show();
 
-	} else {
+		extOutput.appendLine("> " + docData.totalDoctests + " doctests found");
+
+	} else {																				// If there are none, hide the button and status bar items.
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
 
 		doctestStatus.hide();
 		docstringStatus.hide();
+
+		extOutput.appendLine("> No doctests found");
 	}
 }
 
@@ -166,6 +181,12 @@ function execDoctest(terminal: vscode.Terminal) {
 		console.log("Doctest path: '" + doctestPath + "'");
 		console.log("File path: '" + filePath + "'");
 		console.log("Formatted command: \n'" + doctestCommand + "'\n");
+		
+		extOutput.appendLine("> Running doctest");
+		extOutput.appendLine("> Python path: '" + pythonPath + "'");
+		extOutput.appendLine("> Doctest path: '" + doctestPath + "'");
+		extOutput.appendLine("> File path: '" + filePath + "'");
+		extOutput.appendLine("> Formatted command: '" + doctestCommand + "'");
 
 		vscode.window.activeTextEditor.document.save();		// Save document before doctest is run
 		terminal.sendText(doctestCommand);					// Send command to the terminal
