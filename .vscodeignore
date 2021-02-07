@@ -3,14 +3,16 @@
 out/test/**
 src/**
 .gitignore
+.editorconfig
 .yarnrc
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
+**/*.py
 __pycache__/**
 assets/~misc
 assets/example/__pycache__
-assets/example/example.py
 assets/.vscode
+.~todo.txt
