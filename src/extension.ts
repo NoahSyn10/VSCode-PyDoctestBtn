@@ -6,15 +6,12 @@ import { eventNames } from 'process';
 import * as vscode from 'vscode';
 
 let doctestStatus: vscode.StatusBarItem;	
-let docstringStatus: vscode.StatusBarItem;
+let docstringStatus: vscode.StatusBarItem;		// Objects that need to be global
 let extOutput: vscode.OutputChannel;
 
-
-// this method is called when your extension is activated
-// your extension is activated the very first time an activationEvent is triggered
 export function activate(context: vscode.ExtensionContext) {
 	/*
-	Executes once upon activation of extension.
+	Called once upon activation of extension.
 	Initializes elements and listeners.
 	*/
 	extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
@@ -47,33 +44,32 @@ function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?:
 	/*
 	Get data on doctests in file and update menu and status bar accordingly
 	*/
-	if (docChange?.document.fileName !== activeEditor?.document.fileName) {
-		return;																				// Check if change was in the active editor.
+	if ((docChange && docChange?.document.fileName !== activeEditor?.document.fileName) || activeEditor?.document.languageId !== "python") {
+		return;																				// Check if change was in the active editor & if the editor is a .py file
 	}
 		
+	extOutput.appendLine("> Scanning file for doctests...");
+	
 	const docData = doctestDetector(activeEditor);
 
-	extOutput.appendLine("> Scanning file for doctests");
-
 	if (docData?.totalDoctests > 0) {														// If there are doctests, show button and status bar items.
+		extOutput.appendLine("> " + docData.totalDoctests + " doctests found");
+															
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-
 		doctestStatus.text = "Doctests: " + docData.totalDoctests;
 		doctestStatus.show();
 
-		extOutput.appendLine("> " + docData.totalDoctests + " doctests found");
-
 	} else {																				// If there are none, hide the button and status bar items.
+		extOutput.appendLine("> No doctests found");
+		
 		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
-
 		doctestStatus.hide();
 		docstringStatus.hide();
 
-		extOutput.appendLine("> No doctests found");
 	}
 }
 
-function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
+function doctestDetector(activeEditor: vscode.TextEditor) {
 	/*
 	Searches the active document for valid doctests.
 	Returns the number of valid docstrings and doctests in the active file.
@@ -83,30 +79,29 @@ function doctestDetector(activeEditor: vscode.TextEditor | undefined) {
 	var totalDocstrings = 0;
 	var totaldocTests = 0;
 
-	if (activeEditor?.document.languageId === "python") {
-		const doc = activeEditor.document;
+	const doc = activeEditor.document;
 
-		for (var i = 0; i < doc.lineCount; i++) {											// Iterate through each line of text in the active doc
-			const line = doc.lineAt(i);		
+	for (var i = 0; i < doc.lineCount; i++) {											// Iterate through each line of text in the active doc
+		const line = doc.lineAt(i);		
 
-			if (!line.isEmptyOrWhitespace) {												// Ignore if whitespace
-				const txtIndex = line.firstNonWhitespaceCharacterIndex;	
-				const text = line.text.slice(txtIndex);										// Ignore whitespace up to first character
+		if (!line.isEmptyOrWhitespace) {												// Ignore if whitespace
+			const txtIndex = line.firstNonWhitespaceCharacterIndex;	
+			const text = line.text.slice(txtIndex);										// Ignore whitespace up to first character
 
-				if (text.slice(0,3) === '"""' && tripleSingleQuotes % 2 === 0) {			// Count """ if not in ''' docstring
-					tripleDoubleQuotes++;
+			if (text.slice(0,3) === '"""' && tripleSingleQuotes % 2 === 0) {			// Count """ if not in ''' docstring
+				tripleDoubleQuotes++;
 
-				} else if (text.slice(0,3) === "'''" && tripleDoubleQuotes % 2 === 0) {		// Count ''' if not in """ docstring
-					tripleSingleQuotes++;
+			} else if (text.slice(0,3) === "'''" && tripleDoubleQuotes % 2 === 0) {		// Count ''' if not in """ docstring
+				tripleSingleQuotes++;
 
-				} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && 		// Count >>> if followed by a space and a 
-						  (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
-					totaldocTests++;														
-				}
+			} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && 		// Count >>> if followed by a space and a 
+						(tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
+				totaldocTests++;														
 			}
 		}
-		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);			// Total docstrings = sum of floor division of total ''' and """ instances
 	}
+	totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);			// Total docstrings = sum of floor division of total ''' and """ instances
+
 	return {
 		"totalDocstrings": totalDocstrings,
 		"totalDoctests": totaldocTests
@@ -122,11 +117,10 @@ function doctestExecuter() {
 	- 'Doctest'
 	- Any other open terminal
 	*/
-
 	const terminals = vscode.window.terminals;							// Get list of active terminals
 
-	if (findTerminal("Python") > -1) {									// If a "Python" terminal exists:
-		const pyTerminal = terminals[findTerminal("Python")];			// Get index
+	if (findTerminal("Python") > -1) {									// Check for a "Python" terminal
+		const pyTerminal = terminals[findTerminal("Python")];			// If exists: get index
 		pyTerminal.show();												// Force show to user
 		execDoctest(pyTerminal);										// Execute doctest
 
@@ -153,7 +147,6 @@ function findTerminal(termName: String): number {
 	Searches for an open terminal with the given 'termName' as its name.
 	Returns the index of the terminal if found, -1 otherwise.
 	*/
-
 	const terminals = vscode.window.terminals;			// Get list of active terminals
 	for (let i = 0; i < terminals.length; i++) {
 		if (terminals[i].name === termName) {			// Check each list for provided name
@@ -168,25 +161,19 @@ function execDoctest(terminal: vscode.Terminal) {
 	'terminal' is a vscode terminal object.
 	Runs a doctest inside of the provided terminal object.
 	*/
-
 	if (vscode.window.activeTextEditor) {
 		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
 		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
 		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
-
-		console.log("Running doctest");
-		console.log("Python path: '" + pythonPath + "'");
-		console.log("Doctest path: '" + doctestPath + "'");
-		console.log("File path: '" + filePath + "'");
-		console.log("Formatted command: \n'" + doctestCommand + "'\n");
 		
-		extOutput.appendLine("> Running doctest");
-		extOutput.appendLine("> Python path: '" + pythonPath + "'");
-		extOutput.appendLine("> Doctest path: '" + doctestPath + "'");
-		extOutput.appendLine("> File path: '" + filePath + "'");
-		extOutput.appendLine("> Formatted command: '" + doctestCommand + "'");
+		dualLog("> Running doctest...");
+		dualLog("> Python path: '" + pythonPath + "'");
+		dualLog("> Doctest path: '" + doctestPath + "'");
+		dualLog("> File path: '" + filePath + "'");
+		dualLog("> Formatted command: '" + doctestCommand + "'");
+		dualLog("> Pushing command...");
 
 		vscode.window.activeTextEditor.document.save();		// Save document before doctest is run
 		terminal.sendText(doctestCommand);					// Send command to the terminal
@@ -195,8 +182,18 @@ function execDoctest(terminal: vscode.Terminal) {
 	}
 }
 
-// this method is called when your extension is deactivated
+function dualLog(text: string): void {
+	/*
+	Logs the given text in both the console and the extension's output window.
+	*/
+	console.log(text);
+	extOutput.appendLine(text);
+}
+
 export function deactivate() {
+	/*
+	Called upon closure of extension.
+	*/
 
 }
 
