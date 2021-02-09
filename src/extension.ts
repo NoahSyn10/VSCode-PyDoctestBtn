@@ -50,17 +50,23 @@ function doctestLinter(activeEditor: vscode.TextDocument) {
 	Executes doctest silently and parses output.
 	*/
 	const paths = getPaths();
-
 	const execCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
+	var failed = false;
 
 	exec(execCommand, (err, stdout, stderr) => {
 		if (err) {
-			console.log(err);
+			console.log("Error: err tripped");
 		}
 	  
 		// the *entire* stdout and stderr (buffered)
-		console.log(stdout.split('\n').slice(-6,-1));
-		console.log(`stderr: ${stderr}`);
+		const summary = stdout.split('\n').slice(-6,-1);
+		for (var i = 0; i < summary.length; i++) {
+			console.log(summary[i]);
+		}
+
+		if (summary[4][1] === '*') {
+			failed = true;
+		}
 	});
 }
 
