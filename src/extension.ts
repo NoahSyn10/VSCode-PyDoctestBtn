@@ -2,7 +2,8 @@
 // © 2021 Noah Synowiec noahsyn1@gmail.com
 
 import { fstat } from 'fs';
-import { eventNames } from 'process';
+import { eventNames, stderr } from 'process';
+import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
 let doctestStatus: vscode.StatusBarItem;	
@@ -26,7 +27,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(fancyButton);			// Initialize each button command (one for each 'style')
 	context.subscriptions.push(xtraFancyButton);
 	
-	// Calls too often for some reason
 	let docEditListener = vscode.workspace.onDidChangeTextDocument((docChange: vscode.TextDocumentChangeEvent) => doctestHandler(vscode.window.activeTextEditor, docChange));	
 	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestHandler(newTextEditor));
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
@@ -38,7 +38,11 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(docstringStatus);		// Create docstring counter status bar item
 
 	doctestHandler(vscode.window.activeTextEditor);		// Count doctests on activation.
+
+
 }
+
+
 
 function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
 	/*
@@ -95,7 +99,7 @@ function doctestDetector(activeEditor: vscode.TextEditor) {
 				tripleSingleQuotes++;
 
 			} else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && 		// Count >>> if followed by a space and a 
-						(tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
+					  (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
 				totaldocTests++;														
 			}
 		}
@@ -167,6 +171,7 @@ function execDoctest(terminal: vscode.Terminal) {
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
 		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
+		const execCommand = pythonPath + " -m " + doctestPath + " -v " + filePath;
 		
 		dualLog("> Running doctest...");
 		dualLog("> Python path: '" + pythonPath + "'");
@@ -177,6 +182,7 @@ function execDoctest(terminal: vscode.Terminal) {
 
 		vscode.window.activeTextEditor.document.save();		// Save document before doctest is run
 		terminal.sendText(doctestCommand);					// Send command to the terminal
+
 	} else {
 		vscode.window.showErrorMessage("DoctestBtn Error: 'No active text editor'");
 	}
