@@ -32,6 +32,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 
+	let saveListener = vscode.workspace.onDidSaveTextDocument((savedDoc: vscode.TextDocument) => doctestLinter(savedDoc));
+	context.subscriptions.push(saveListener);
+
 	doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);	
 	docstringStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);	
 	context.subscriptions.push(doctestStatus);			// Create doctest counter status bar item
@@ -42,7 +45,24 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
+function doctestLinter(activeEditor: vscode.TextDocument) {
+	/*
+	Executes doctest silently and parses output.
+	*/
+	const paths = getPaths();
 
+	const execCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
+
+	exec(execCommand, (err, stdout, stderr) => {
+		if (err) {
+			console.log(err);
+		}
+	  
+		// the *entire* stdout and stderr (buffered)
+		console.log(stdout.split('\n').slice(-6,-1));
+		console.log(`stderr: ${stderr}`);
+	});
+}
 
 function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
 	/*
@@ -166,17 +186,15 @@ function execDoctest(terminal: vscode.Terminal) {
 	Runs a doctest inside of the provided terminal object.
 	*/
 	if (vscode.window.activeTextEditor) {
-		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
-		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
-		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
-		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
-		const execCommand = pythonPath + " -m " + doctestPath + " -v " + filePath;
+		const paths = getPaths();
+
+		const doctestCommand = "& " + paths.python + " -m " + paths.doctest + " -v " + paths.file;	// Format the doctest command to be run
 		
 		dualLog("> Running doctest...");
-		dualLog("> Python path: '" + pythonPath + "'");
-		dualLog("> Doctest path: '" + doctestPath + "'");
-		dualLog("> File path: '" + filePath + "'");
+		dualLog("> Python path: '" + paths.python + "'");
+		dualLog("> Doctest path: '" + paths.doctest + "'");
+		dualLog("> File path: '" + paths.file + "'");
 		dualLog("> Formatted command: '" + doctestCommand + "'");
 		dualLog("> Pushing command...");
 
@@ -186,6 +204,16 @@ function execDoctest(terminal: vscode.Terminal) {
 	} else {
 		vscode.window.showErrorMessage("DoctestBtn Error: 'No active text editor'");
 	}
+}
+
+function getPaths() {
+	const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
+	const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module
+	const filePath = vscode.window.activeTextEditor?.document.fileName;						// Retrieve path of current tile (to be doctested)
+
+	return {"python": pythonPath,
+			"doctest": doctestPath,
+			"file": filePath};
 }
 
 function dualLog(text: string): void {
