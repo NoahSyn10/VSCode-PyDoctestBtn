@@ -1,5 +1,7 @@
-// PyDoctestBtn
-// © 2021 Noah Synowiec noahsyn1@gmail.com
+/*
+	PyDoctestBtn
+	© 2021 Noah Synowiec - noahsyn1@gmail.com
+*/	
 
 import { fstat } from 'fs';
 import { eventNames, stderr } from 'process';
@@ -12,8 +14,8 @@ let extOutput: vscode.OutputChannel;
 
 export function activate(context: vscode.ExtensionContext) {
 	/*
-	Called once upon activation of extension.
-	Initializes elements and listeners.
+		Called once upon activation of extension.
+		Initializes elements and listeners.
 	*/
 	extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
 
@@ -47,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 function doctestLinter(activeEditor: vscode.TextDocument) {
 	/*
-	Executes doctest silently and parses output.
+		Executes doctest silently and parses output.
 	*/
 	const paths = getPaths();
 	const execCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
@@ -72,7 +74,7 @@ function doctestLinter(activeEditor: vscode.TextDocument) {
 
 function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
 	/*
-	Get data on doctests in file and update menu and status bar accordingly
+		Get data on doctests in file and update menu and status bar accordingly
 	*/
 	if ((docChange && docChange?.document.fileName !== activeEditor?.document.fileName) || activeEditor?.document.languageId !== "python") {
 		return;																				// Check if change was in the active editor & if the editor is a .py file
@@ -101,8 +103,8 @@ function doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?:
 
 function doctestDetector(activeEditor: vscode.TextEditor) {
 	/*
-	Searches the active document for valid doctests.
-	Returns the number of valid docstrings and doctests in the active file.
+		Searches the active document for valid doctests.
+		Returns the number of valid docstrings and doctests in the active file.
 	*/
 	var tripleDoubleQuotes = 0; 
 	var tripleSingleQuotes = 0; 
@@ -140,12 +142,12 @@ function doctestDetector(activeEditor: vscode.TextEditor) {
 
 function doctestExecuter() {
 	/*
-	Brings focus to a terminal with highest 'priority', and creates one if none exists.
-	Executes doctest in active terminal using execDoctest().
-	Priority levels by terminal name:
-	- 'Python'
-	- 'Doctest'
-	- Any other open terminal
+		Brings focus to a terminal with highest 'priority', and creates one if none exists.
+		Executes doctest in active terminal using execDoctest().
+		Priority levels by terminal name:
+		- 'Python'
+		- 'Doctest'
+		- Any other open terminal
 	*/
 	const terminals = vscode.window.terminals;							// Get list of active terminals
 
@@ -174,8 +176,8 @@ function doctestExecuter() {
 
 function findTerminal(termName: String): number {
 	/*
-	Searches for an open terminal with the given 'termName' as its name.
-	Returns the index of the terminal if found, -1 otherwise.
+		Searches for an open terminal with the given 'termName' as its name.
+		Returns the index of the terminal if found, -1 otherwise.
 	*/
 	const terminals = vscode.window.terminals;			// Get list of active terminals
 	for (let i = 0; i < terminals.length; i++) {
@@ -188,8 +190,8 @@ function findTerminal(termName: String): number {
 
 function execDoctest(terminal: vscode.Terminal) {
 	/*
-	'terminal' is a vscode terminal object.
-	Runs a doctest inside of the provided terminal object.
+		'terminal' is a vscode terminal object.
+		Runs a doctest inside of the provided terminal object.
 	*/
 	if (vscode.window.activeTextEditor) {
 
@@ -224,7 +226,7 @@ function getPaths() {
 
 function dualLog(text: string): void {
 	/*
-	Logs the given text in both the console and the extension's output window.
+		Logs the given text in both the console and the extension's output window.
 	*/
 	console.log(text);
 	extOutput.appendLine(text);
@@ -232,7 +234,7 @@ function dualLog(text: string): void {
 
 export function deactivate() {
 	/*
-	Called upon closure of extension.
+		Called upon closure of extension.
 	*/
 
 }
