@@ -21,7 +21,7 @@ class Executor {
             Format the doctest command to be run.
         */
         const paths = this.config.getPaths();
-        return "& " + paths.python + " -m " + paths.doctest + " -v " + paths.file;
+        return paths.python + " -m " + paths.doctest + " -v " + paths.file;
     }
 
     // Execute doctest
