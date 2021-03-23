@@ -47,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
+// Adapted
 function doctestLinter(activeEditor: vscode.TextDocument) {
 	/*
 		Executes doctest silently and parses output.
