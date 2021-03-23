@@ -4,10 +4,9 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
-class TerminalHandler {
+export class TerminalHandler {
 
     constructor () {}
 
@@ -50,4 +49,13 @@ class TerminalHandler {
             return vscode.window.createTerminal(`Doctest`);     
         }	
     }    
+
+    // Excecute commands in terminal.
+    executeInTerminal(terminal: vscode.Terminal, command: string) {
+        /*
+            Execute given string in given terminal, after saving active document.
+        */
+        vscode.window.activeTextEditor!.document.save();    // Save document before doctest is run
+		terminal.sendText(command);					        // Send command to the terminal
+    }
 }

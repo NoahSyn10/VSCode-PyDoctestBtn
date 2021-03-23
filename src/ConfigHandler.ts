@@ -4,7 +4,6 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
 export class ConfigHandler {
@@ -24,6 +23,14 @@ export class ConfigHandler {
 
     // Get button settings.
 
-
     // Set button settings.
+
+    // Generate Doctest command from preferences.
+    getDoctestCommand() {
+        /*
+            Format the doctest command to be run.
+        */
+        const paths = this.getPaths();
+        return paths.python + " -m " + paths.doctest + " -v " + paths.file;
+    }
 }
