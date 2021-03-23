@@ -39,17 +39,23 @@ export class TerminalHandler {
         */
         const terminals = vscode.window.terminals;              // Get list of active terminals.
 
+        this.utils.dualLog("> Retrieving main terminal...");
+
         if (this.findTerminal("Python") > -1) {                 // Check for "Python" terminal.
+            this.utils.dualLog("> Python terminal found.");
             return terminals[this.findTerminal("Python")];      
 
         } else if (this.findTerminal("Doctest") > -1) {         // Check for "Doctest" terminal.
+            this.utils.dualLog("> Doctest terminal found.");
             return terminals[this.findTerminal("Doctest")];        
 
         } else if (vscode.window.activeTerminal) {	            //  If neither exists check for any active terminal.
+            this.utils.dualLog("> Active terminal '" + vscode.window.activeTerminal.name + "' found.");
             return vscode.window.activeTerminal;
 
         } else {                                                // If no terminal exists, create "Doctest" terminal.
-            return vscode.window.createTerminal(`Doctest`);     
+            this.utils.dualLog("> Doctest terminal created.");
+            return vscode.window.createTerminal("Doctest");     
         }	
     }    
 
@@ -57,6 +63,7 @@ export class TerminalHandler {
         /*
             Execute given string in given terminal, after saving active document.
         */
+        this.utils.dualLog("> Executing command '" + command.slice(0, 5) + "...' in terminal '" + terminal.name + "'");
         vscode.window.activeTextEditor!.document.save();    // Save document before doctest is run
 		terminal.sendText(command);					        // Send command to the terminal
     }

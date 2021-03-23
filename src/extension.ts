@@ -19,9 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let doctestBtn = new DoctestBtn;
 	let utils = new Utils;
 
-	let extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
-	console.log('> DoctestBtn active');
-	extOutput.appendLine("> DoctestBtn active");
+	utils.dualLog('> DoctestBtn active');
 
 	let plainButton = vscode.commands.registerCommand('doctestbtn.execDoctest_plain', () => doctestBtn.execDoctest());
 	let fancyButton = vscode.commands.registerCommand('doctestbtn.execDoctest_fancy', () => doctestBtn.execDoctest());		

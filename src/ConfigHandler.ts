@@ -20,6 +20,11 @@ export class ConfigHandler {
         const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module.
         const filePath = vscode.window.activeTextEditor?.document.fileName;						// Retrieve path of current file (to be doctested).
     
+        this.utils.dualLog("> Retrieving paths..." + 
+                         "\n> Python: " + pythonPath + 
+                         "\n> Doctest: " + doctestPath + 
+                         "\n> Doctest: " + doctestPath);
+
         return {"python": pythonPath,
                 "doctest": doctestPath,
                 "file": filePath};
@@ -34,6 +39,8 @@ export class ConfigHandler {
             Format the doctest command to be run.
         */
         const paths = this.getPaths();
-        return paths.python + " -m " + paths.doctest + " -v " + paths.file;
+        let doctestCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
+        this.utils.dualLog("> Command: " + doctestCommand);
+        return doctestCommand;
     }
 }
