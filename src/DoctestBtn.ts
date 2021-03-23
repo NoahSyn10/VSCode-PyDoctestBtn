@@ -25,7 +25,6 @@ export class DoctestBtn {
         this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
     }
 
-    // Execute doctest.
     execDoctest() {
         /*
             Excecutes the doctest command in the main terminal.
@@ -35,7 +34,6 @@ export class DoctestBtn {
         this.terminalHandler.executeInTerminal(terminal, doctestCommand);
     }
 
-    // Handle doctest counter (status bar).
     doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
         /*
             Get data on doctests in file and update menu and status bar accordingly.

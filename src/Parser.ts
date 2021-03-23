@@ -16,7 +16,6 @@ export class Parser {
         this.config = new ConfigHandler;
     }
 
-    // Detect doctests.
     countDoctests(textEditor: vscode.TextEditor) {
         /*
             Searches the given document for valid doctests.

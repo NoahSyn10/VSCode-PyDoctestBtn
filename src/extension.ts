@@ -1,30 +1,23 @@
 /*
 	PyDoctestBtn
+	Extension Activation
 	© 2021 Noah Synowiec - noahsyn1@gmail.com
 */	
 
 import { fstat } from 'fs';
 import { eventNames, stderr } from 'process';
-import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
 import { DoctestBtn } from './DoctestBtn';
-
-let doctestStatus: vscode.StatusBarItem;	
-let docstringStatus: vscode.StatusBarItem;		// Objects that need to be global
-let extOutput: vscode.OutputChannel;
-
-let doctestBtn: DoctestBtn;
 
 export function activate(context: vscode.ExtensionContext) {
 	/*
 		Called once upon activation of extension.
 		Initializes elements and listeners.
 	*/
-	extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
+	let doctestBtn = new DoctestBtn;
 
-	doctestBtn = new DoctestBtn;
-
+	let extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
 	console.log('> DoctestBtn active');
 	extOutput.appendLine("> DoctestBtn active");
 

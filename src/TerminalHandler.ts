@@ -10,7 +10,6 @@ export class TerminalHandler {
 
     constructor () {}
 
-    // Find terminal.
     findTerminal(termName: String): number {
         /*
             Searches for an open terminal with the given 'termName' as its name.
@@ -25,7 +24,6 @@ export class TerminalHandler {
         return -1;											// Return -1 otherwise.
     }
 
-    // Handle terminal precedence and creation.
     getMainTerminal(): vscode.Terminal {
         /*
             Returns the terminal with highest 'priority', and creates one if none exists.
@@ -50,7 +48,6 @@ export class TerminalHandler {
         }	
     }    
 
-    // Excecute commands in terminal.
     executeInTerminal(terminal: vscode.Terminal, command: string) {
         /*
             Execute given string in given terminal, after saving active document.

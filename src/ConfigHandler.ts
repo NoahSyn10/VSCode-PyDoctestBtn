@@ -10,7 +10,6 @@ export class ConfigHandler {
 
     constructor () {}
 
-    // Get path settings.
     public getPaths() {
         const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable.
         const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module.
@@ -25,7 +24,6 @@ export class ConfigHandler {
 
     // Set button settings.
 
-    // Generate Doctest command from preferences.
     getDoctestCommand() {
         /*
             Format the doctest command to be run.
