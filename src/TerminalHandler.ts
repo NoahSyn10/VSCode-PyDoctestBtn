@@ -4,11 +4,16 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
+import { Utils } from './Utils';
 import * as vscode from 'vscode';
 
 export class TerminalHandler {
 
-    constructor () {}
+    utils;
+
+    constructor () {
+        this.utils = new Utils;
+    }
 
     findTerminal(termName: String): number {
         /*

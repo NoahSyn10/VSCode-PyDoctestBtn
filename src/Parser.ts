@@ -4,16 +4,19 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import {ConfigHandler} from './ConfigHandler';
+import { ConfigHandler } from './ConfigHandler';
+import { Utils } from './Utils';
 import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
 export class Parser {
 
     config;
+    utils;
 
     constructor () {
         this.config = new ConfigHandler;
+        this.utils = new Utils;
     }
 
     countDoctests(textEditor: vscode.TextEditor) {

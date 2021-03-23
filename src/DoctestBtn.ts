@@ -4,9 +4,10 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import {ConfigHandler} from './ConfigHandler';
-import {Parser} from './Parser';
-import {TerminalHandler} from './TerminalHandler';
+import { ConfigHandler } from './ConfigHandler';
+import { Parser } from './Parser';
+import { TerminalHandler } from './TerminalHandler';
+import { Utils } from './Utils';
 import * as vscode from 'vscode';
 
 export class DoctestBtn {
@@ -14,6 +15,7 @@ export class DoctestBtn {
     config;
     parser;
     terminalHandler;
+    utils;
 
     doctestStatus;
 
@@ -21,6 +23,7 @@ export class DoctestBtn {
         this.config = new ConfigHandler;
         this.parser = new Parser;
         this.terminalHandler = new TerminalHandler;
+        this.utils = new Utils;
 
         this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
     }

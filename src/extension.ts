@@ -9,6 +9,7 @@ import { eventNames, stderr } from 'process';
 import * as vscode from 'vscode';
 
 import { DoctestBtn } from './DoctestBtn';
+import { Utils } from './Utils';
 
 export function activate(context: vscode.ExtensionContext) {
 	/*
@@ -16,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 		Initializes elements and listeners.
 	*/
 	let doctestBtn = new DoctestBtn;
+	let utils = new Utils;
 
 	let extOutput = vscode.window.createOutputChannel("DoctestBtn");	// Initialize output channel
 	console.log('> DoctestBtn active');

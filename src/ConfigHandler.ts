@@ -4,11 +4,16 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
+import { Utils } from './Utils';
 import * as vscode from 'vscode';
 
 export class ConfigHandler {
 
-    constructor () {}
+    utils;
+
+    constructor () {
+        this.utils = new Utils;
+    }
 
     public getPaths() {
         const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable.
