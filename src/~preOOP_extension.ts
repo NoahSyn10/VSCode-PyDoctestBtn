@@ -231,6 +231,7 @@ function getPaths() {
 			"file": filePath};
 }
 
+// Adapted
 function dualLog(text: string): void {
 	/*
 		Logs the given text in both the console and the extension's output window.
