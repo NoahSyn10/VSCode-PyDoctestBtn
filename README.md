@@ -77,6 +77,11 @@ N/A
 
 ## Release Notes
 
+### v1.0.1 - 2021-02-13
+
+* Quick fix.
+* Fixed issue where ReadMe was not showing in the VSCode extension viewer.
+
 ### v1.0.0 - 2021-02-02
 
 * Initial release of DoctestBtn.
