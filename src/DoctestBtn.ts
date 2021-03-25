@@ -12,7 +12,7 @@ import * as vscode from 'vscode';
 
 export class DoctestBtn {
     /*
-        An class containing methods that are triggered by the extension's event listeners.
+        A class containing methods that are triggered by the extension's event listeners.
         This class combines the functionality of all other classes to make the DoctestBtn extension.
     */
 
