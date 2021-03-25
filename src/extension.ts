@@ -69,7 +69,7 @@ function execDoctest(terminal: vscode.Terminal) {
 		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
-		const doctestCommand = "& " + pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
+		const doctestCommand = pythonPath + " -m " + doctestPath + " -v " + filePath;	// Format the doctest command to be run
 
 		console.log("Running doctest");
 		console.log("Python path: '" + pythonPath + "'");
