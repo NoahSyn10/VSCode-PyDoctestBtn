@@ -77,10 +77,16 @@ N/A
 
 ## Release Notes
 
+### v1.0.2 - 2021-03-24
+
+* Quick fix.
+  * Fixed issue where an & symbol prefixing the doctest command could cause issues on non-windows devices.
+  * Thanks to vbrozik: https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues/3
+
 ### v1.0.1 - 2021-02-13
 
 * Quick fix.
-* Fixed issue where ReadMe was not showing in the VSCode extension viewer.
+  * Fixed issue where ReadMe was not showing in the VSCode extension viewer.
 
 ### v1.0.0 - 2021-02-02
 
