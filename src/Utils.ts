@@ -7,6 +7,9 @@
 import * as vscode from 'vscode';
 
 export class Utils {
+    /*
+        A class containing simple utility methods for ease of use.
+    */
 
     extOutput;
 

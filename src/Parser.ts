@@ -10,6 +10,9 @@ import { exec } from 'child_process';
 import * as vscode from 'vscode';
 
 export class Parser {
+    /*
+        A class containing methods for the parsing of documents for various purposes.
+    */
 
     config;
     utils;

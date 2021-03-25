@@ -8,6 +8,9 @@ import { Utils } from './Utils';
 import * as vscode from 'vscode';
 
 export class ConfigHandler {
+    /*
+        A class holding methods for getting and setting configurations.
+    */
 
     utils;
     doctestStatus;

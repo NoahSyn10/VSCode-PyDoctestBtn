@@ -8,6 +8,9 @@ import { Utils } from './Utils';
 import * as vscode from 'vscode';
 
 export class TerminalHandler {
+    /*
+        A class containing methods related to the retrieval and use of integrated terminals.
+    */
 
     utils;
 
