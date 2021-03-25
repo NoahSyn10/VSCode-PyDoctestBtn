@@ -17,15 +17,11 @@ export class DoctestBtn {
     terminalHandler;
     utils;
 
-    doctestStatus;
-
     constructor () {
         this.config = new ConfigHandler;
         this.parser = new Parser;
         this.terminalHandler = new TerminalHandler;
         this.utils = new Utils;
-
-        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
     }
 
     execDoctest() {
@@ -51,18 +47,13 @@ export class DoctestBtn {
 
         const docData = this.parser.countDoctests(activeEditor);
     
-        if (docData?.totalDoctests > 0) {														// If there are doctests, show button and status bar items.                                                       
-            this.utils.dualLog("> " + docData.totalDoctests + " doctests found");
-            
-            vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-            this.doctestStatus.text = "Doctests: " + docData.totalDoctests;
-            this.doctestStatus.show();
+        if (docData?.totalDoctests > 0) {			
+            this.utils.dualLog("> " + docData.totalDoctests + " doctests found.");											// If there are doctests, show button and status bar items.                                                       
+            this.config.showDoctestBtn(docData.totalDoctests);
     
         } else {																				// If there are none, hide the button and status bar items.            
-            this.utils.dualLog("> No doctests found");
-
-            vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
-            this.doctestStatus.hide();
+            this.utils.dualLog("> No doctests found.");
+            this.config.hideDoctestBtn();
         }
     }
 
