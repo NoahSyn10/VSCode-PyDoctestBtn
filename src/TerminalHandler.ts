@@ -6,6 +6,8 @@
 
 import { Utils } from './Utils';
 import * as vscode from 'vscode';
+import { config } from 'process';
+import { exec } from 'child_process';
 
 export class TerminalHandler {
     /*
@@ -69,5 +71,15 @@ export class TerminalHandler {
         this.utils.dualLog("> Executing command '" + command.slice(0, 5) + "...' in terminal '" + terminal.name + "'");
         vscode.window.activeTextEditor!.document.save();    // Save document before doctest is run
 		terminal.sendText(command);					        // Send command to the terminal
+    }
+
+    executeForResult(command: string) {
+        exec(command, (err, stdout, stderr) => {
+            if (err) {
+                console.log("Error: err tripped");
+            }
+
+            return stdout;
+        });
     }
 }

@@ -6,7 +6,7 @@
 
 import { ConfigHandler } from './ConfigHandler';
 import { Utils } from './Utils';
-import { exec } from 'child_process';
+import { TerminalHandler } from './TerminalHandler';
 import * as vscode from 'vscode';
 
 export class Parser {
@@ -16,10 +16,12 @@ export class Parser {
 
     config;
     utils;
+    termHandler;
 
     constructor () {
         this.config = new ConfigHandler;
         this.utils = new Utils;
+        this.termHandler = new TerminalHandler;
     }
 
     countDoctests(textEditor: vscode.TextEditor) {
@@ -70,23 +72,19 @@ export class Parser {
             Executes doctest silently and parses output.
         */
         const paths = this.config.getPaths();
-        const execCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
         var failed = false;
+
+        const execCommand = this.config.getDoctestCommand;
+
+        this.termHandler.executeForResult(execCommand);
     
-        exec(execCommand, (err, stdout, stderr) => {
-            if (err) {
-                console.log("Error: err tripped");
-            }
-          
-            // the *entire* stdout and stderr (buffered)
-            const summary = stdout.split('\n').slice(-6,-1);
-            for (var i = 0; i < summary.length; i++) {
-                console.log(summary[i]);
-            }
-    
-            if (summary[4][1] === '*') {
-                failed = true;
-            }
-        });
+        const summary = stdout.split('\n').slice(-6,-1);
+        for (var i = 0; i < summary.length; i++) {
+            console.log(summary[i]);
+        }
+
+        if (summary[4][1] === '*') {
+            failed = true;
+        }
     }
 }
