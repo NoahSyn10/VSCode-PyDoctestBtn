@@ -77,6 +77,11 @@ N/A
 
 ## Release Notes
 
+### v1.0.3 - 2021-04-08
+
+* Fixes for changes made in the VSCode March 2021 release.
+  * Fix for change in title 'groups' that caused the doctestBtn to fail to appear.
+
 ### v1.0.2 - 2021-03-24
 
 * Quick fix.
