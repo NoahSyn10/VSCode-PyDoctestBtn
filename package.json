@@ -89,17 +89,17 @@
 				{
 				  "when": "editorLangId == python && !config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
 				  "command": "doctestbtn.execDoctest_plain",
-				  "group": "1_run"
+				  "group": "navigation"
 				},
 				{
 					"when": "editorLangId == python && config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
 					"command": "doctestbtn.execDoctest_fancy",
-					"group": "1_run"
+					"group": "navigation"
 				},
 				{
 					"when": "editorLangId == python && config.doctestbtn.buttonColor.xtraFancy",
 					"command": "doctestbtn.execDoctest_xtraFancy",
-					"group": "1_run"
+					"group": "navigation"
 				}
 			  ]
 		},
