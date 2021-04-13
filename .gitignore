@@ -1,12 +1,12 @@
+**/__pycache__
 out
 dist
 node_modules
 .vscode-test/
 *.vsix
 assets/~misc
-assets/example/__pycache__
 assets/.vscode
 vsc-extension-quickstart.md
-~packaged
 vsc-extension-quickstart.md
+~packaged
 .~todo.txt
