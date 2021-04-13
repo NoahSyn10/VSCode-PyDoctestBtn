@@ -74,17 +74,23 @@ export class Parser {
         const paths = this.config.getPaths();
         var failed = false;
 
-        const execCommand = this.config.getDoctestCommand;
+        const execCommand = this.config.getDoctestCommand();
 
-        this.termHandler.executeForResult(execCommand);
+        let result = this.termHandler.executeForResult(execCommand);
     
-        const summary = stdout.split('\n').slice(-6,-1);
+        const summary = result.split('\n').slice(-6,-1);
         for (var i = 0; i < summary.length; i++) {
             console.log(summary[i]);
         }
 
         if (summary[4][1] === '*') {
+            console.log("Failed Doctest");
             failed = true;
+        } else {
+            console.log("Passed Doctest");
+            failed = false;
         }
+
+
     }
 }

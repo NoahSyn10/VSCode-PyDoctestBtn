@@ -15,9 +15,11 @@ export class TerminalHandler {
     */
 
     utils;
+    tempResult;
 
     constructor () {
         this.utils = new Utils;
+        this.tempResult = "";
     }
 
     findTerminal(termName: String): number {
@@ -73,13 +75,18 @@ export class TerminalHandler {
 		terminal.sendText(command);					        // Send command to the terminal
     }
 
-    executeForResult(command: string) {
+    executeForResult(command: string): string {
         exec(command, (err, stdout, stderr) => {
             if (err) {
                 console.log("Error: err tripped");
             }
 
-            return stdout;
+            this.tempResult = stdout;
         });
+        
+        let result = this.tempResult;
+        this.tempResult = "";
+
+        return result;
     }
 }
