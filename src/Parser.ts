@@ -26,7 +26,7 @@ export class Parser {
         this.termHandler = new TerminalHandler;
     }
 
-    countDoctests(textEditor: vscode.TextEditor) {
+    countDoctests(textEditor: vscode.TextEditor, callback: Utils["doubleNumCallback"]) {
         /*
             Searches the given document for valid doctests.
             Returns the number of valid docstrings and doctests in the active file.
@@ -34,7 +34,7 @@ export class Parser {
         var tripleDoubleQuotes = 0; 
         var tripleSingleQuotes = 0; 
         var totalDocstrings = 0;
-        var totaldocTests = 0;
+        var totalDoctests = 0;
     
         const doc = textEditor.document;
     
@@ -53,20 +53,17 @@ export class Parser {
     
                 } else if (text.slice(0, 4) === ">>> " && text.trim().length > 4 && 		// Count >>> if followed by a space and a 
                           (tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)) {	// character and inside a """ or ''' docstring.
-                    totaldocTests++;														
+                    totalDoctests++;														
                 }
             }
         }
         totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);			// Total docstrings = sum of floor division of total ''' and """ instances
     
         this.utils.dualLog("> Counting doctests..." +
-                         "\n> Doctests: " + totaldocTests +
+                         "\n> Doctests: " + totalDoctests +
                          "\n> Docstrings: " + totalDocstrings);
 
-        return {
-            "totalDocstrings": totalDocstrings,
-            "totalDoctests": totaldocTests
-        };
+        callback(totalDoctests, totalDocstrings);
     }
 
     doctestLinter(textEditor: vscode.TextDocument) {

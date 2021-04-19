@@ -44,21 +44,21 @@ export class DoctestBtn {
             Get data on doctests in file and update menu and status bar accordingly.
         */
         if ((docChange && docChange?.document.fileName !== activeEditor?.document.fileName) || activeEditor?.document.languageId !== "python") {
-            return;													                    // Check if change was in the active editor & if the editor is a .py file
+            return;													                // Check if change was in the active editor & if the editor is a .py file
         }
         
         this.utils.dualLog("> Scanning file for doctests...");
 
-        const docData = this.parser.countDoctests(activeEditor);
-    
-        if (docData?.totalDoctests > 0) {			
-            this.utils.dualLog("> " + docData.totalDoctests + " doctests found.");		// If there are doctests, show button and status bar items.                                                       
-            this.config.showDoctestBtn(docData.totalDoctests);
-    
-        } else {							                                            // If there are none, hide the button and status bar items.            
-            this.utils.dualLog("> No doctests found.");
-            this.config.hideDoctestBtn();
-        }
+        this.parser.countDoctests(activeEditor, (totalDoctests, totalDocstrings) => {
+            if (totalDoctests > 0) {			
+                this.utils.dualLog("> " + totalDoctests + " doctests found.");		// If there are doctests, show button and status bar items.                                                       
+                this.config.showDoctestBtn(totalDoctests);
+        
+            } else {							                                    // If there are none, hide the button and status bar items.            
+                this.utils.dualLog("> No doctests found.");
+                this.config.hideDoctestBtn();
+            }
+        });
     }
 
     linter(textEditor: vscode.TextDocument) {
