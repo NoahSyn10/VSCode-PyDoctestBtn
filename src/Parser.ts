@@ -66,15 +66,17 @@ export class Parser {
         callback(totalDoctests, totalDocstrings);
     }
 
-    doctestLinter(textEditor: vscode.TextDocument) {
+    doctestLinter(textEditor: vscode.TextDocument, callback: Utils["singleNumCallback"]) {
         /*
             Executes doctest silently and parses output.
         */
-            const paths = this.config.getPaths();
             var failed = false;
+            var numFailures = 0;
     
             const execCommand = this.config.getDoctestCommand();
     
+            //vscode.window.activeTextEditor!.document.save();
+
             exec(execCommand, (err, result) => {
                 if (err) {
                     console.log("Error: err tripped");
@@ -88,10 +90,15 @@ export class Parser {
                 if (summary[4][1] === '*') {
                     console.log("Failed Doctest");
                     failed = true;
+                    this.utils.dualLog("slice: " + summary[4].slice(18, -10));
+                    numFailures = parseInt(summary[4].slice(18, -10));
+
                 } else {
                     console.log("Passed Doctest");
                     failed = false;
                 }
+
+                callback(numFailures);
             });
     }
 }

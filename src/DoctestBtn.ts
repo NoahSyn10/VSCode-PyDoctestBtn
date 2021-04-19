@@ -62,6 +62,12 @@ export class DoctestBtn {
     }
 
     linter(textEditor: vscode.TextDocument) {
-        this.parser.doctestLinter(textEditor);
+        this.parser.doctestLinter(textEditor, (numFailures) => {
+            if (numFailures < 1) {
+                this.config.showDoctestStatus("passing");
+            } else {
+                this.config.showDoctestStatus(numFailures + " failures");
+            }
+        });
     }
 }

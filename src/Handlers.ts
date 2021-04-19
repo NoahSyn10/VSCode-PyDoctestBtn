@@ -71,11 +71,10 @@ export class TerminalHandler {
             Execute given string in given terminal, after saving active document.
         */
         this.utils.dualLog("> Executing command '" + command.slice(0, 5) + "...' in terminal '" + terminal.name + "'");
-        vscode.window.activeTextEditor!.document.save();    // Save document before doctest is run
+        vscode.window.activeTextEditor!.document.save();    // Save document before command is run
 		terminal.sendText(command);					        // Send command to the terminal
     }
 }
-
 
 export class ConfigHandler {
     /*
@@ -83,11 +82,13 @@ export class ConfigHandler {
     */
 
     utils;
+    doctestCount;
     doctestStatus;
 
     constructor () {
         this.utils = new Utils;
-        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
+        this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
+        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.2);
     }
 
     public getPaths() {
@@ -127,8 +128,8 @@ export class ConfigHandler {
             Makes the doctest button and status bar counter visible after setting counter to given count.
         */
         vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-        this.doctestStatus.text = "Doctests: " + totalDoctests;
-        this.doctestStatus.show();
+        this.doctestCount.text = "Doctests: " + totalDoctests;
+        this.doctestCount.show();
     }
 
     hideDoctestBtn() {
@@ -136,6 +137,13 @@ export class ConfigHandler {
             Hides the doctest button and status bar counter.
         */
         vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
-        this.doctestStatus.hide();
+        this.doctestCount.hide();
     }
+
+    showDoctestStatus(status: string) {
+        this.doctestStatus.text = "Status: " + status;
+        this.doctestStatus.show();
+    }
+
+    hideDoctestStatus() { this.doctestStatus.hide(); }
 }
