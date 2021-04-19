@@ -70,6 +70,7 @@ export class Parser {
         /*
             Executes doctest silently and parses output.
         */
+
             var failed = false;
             var numFailures = 0;
     
@@ -81,21 +82,64 @@ export class Parser {
                 if (err) {
                     console.log("Error: err tripped");
                 }
-    
+
+                if (!vscode.window.activeTextEditor) {
+                    return;
+                }
+
+                // Output last 4 lines of doctest result
                 const summary = result.split('\n').slice(-6,-1);
                 for (var i = 0; i < summary.length; i++) {
                     console.log(summary[i]);
                 }
     
-                if (summary[4][1] === '*') {
+                // If failed, get total number of failures
+                if (summary[4][0] === '*') {
                     console.log("Failed Doctest");
                     failed = true;
                     this.utils.dualLog("slice: " + summary[4].slice(18, -10));
                     numFailures = parseInt(summary[4].slice(18, -10));
-
                 } else {
                     console.log("Passed Doctest");
                     failed = false;
+                }
+
+                // Find each failure and its line number.
+
+                let diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
+                let diagnostics : vscode.Diagnostic[] = [];
+
+                const results = result.split('\n').slice(0, -7);
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].length > 60 && results[i][0] === '*') {
+                        var failureLine = parseInt(results[i + 1].split(', ')[1].slice(5));
+                        this.utils.dualLog("Doctest failure on line " + failureLine.toString());
+
+                        // Get range.
+                        let doc = vscode.window.activeTextEditor.document;
+                        let failureRange = new vscode.Range(failureLine, doc.lineAt(failureLine).firstNonWhitespaceCharacterIndex,
+                                                     failureLine, doc?.lineAt(failureLine).text.length);
+                        
+                        // Get error message.
+                        var errorMsg = "Failure";
+                        let narrowedResults = results.slice(i);
+                        for (var j = 0; j < narrowedResults.length; j++) {
+                            if (narrowedResults[j].slice(0, 7) === "Trying:") {
+                                const msg = narrowedResults[j-1].trim();
+                                errorMsg = "*" + msg + "*";
+                                break;
+                            }
+                        }
+
+                        // New Diagnostic.
+                        diagnostics.push(new vscode.Diagnostic(failureRange, errorMsg, vscode.DiagnosticSeverity.Warning));
+                    }
+                }
+
+                // Push diagnostics
+                this.utils.dualLog(diagnostics.toString());
+                if (vscode.window.activeTextEditor) {
+                    diagnosticCollection.set(vscode.window.activeTextEditor?.document.uri, diagnostics);
                 }
 
                 callback(numFailures);
