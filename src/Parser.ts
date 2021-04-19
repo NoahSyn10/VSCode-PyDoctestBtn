@@ -125,8 +125,7 @@ export class Parser {
                         let narrowedResults = results.slice(i);
                         for (var j = 0; j < narrowedResults.length; j++) {
                             if (narrowedResults[j].slice(0, 7) === "Trying:") {
-                                const msg = narrowedResults[j-1].trim();
-                                errorMsg = "*" + msg + "*";
+                                errorMsg = "*" + narrowedResults[j-1].trim() + "*";
                                 break;
                             }
                         }
