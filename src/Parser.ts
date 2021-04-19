@@ -8,6 +8,8 @@ import { ConfigHandler } from './Handlers';
 import { TerminalHandler } from './Handlers';
 import { Utils } from './Utils';
 import * as vscode from 'vscode';
+import { config } from 'process';
+import { exec } from 'child_process';
 
 export class Parser {
     /*
@@ -71,26 +73,28 @@ export class Parser {
         /*
             Executes doctest silently and parses output.
         */
-        const paths = this.config.getPaths();
-        var failed = false;
-
-        const execCommand = this.config.getDoctestCommand();
-
-        let result = this.termHandler.executeForResult(execCommand);
+            const paths = this.config.getPaths();
+            var failed = false;
     
-        const summary = result.split('\n').slice(-6,-1);
-        for (var i = 0; i < summary.length; i++) {
-            console.log(summary[i]);
-        }
-
-        if (summary[4][1] === '*') {
-            console.log("Failed Doctest");
-            failed = true;
-        } else {
-            console.log("Passed Doctest");
-            failed = false;
-        }
-
-
+            const execCommand = this.config.getDoctestCommand();
+    
+            exec(execCommand, (err, result) => {
+                if (err) {
+                    console.log("Error: err tripped");
+                }
+    
+                const summary = result.split('\n').slice(-6,-1);
+                for (var i = 0; i < summary.length; i++) {
+                    console.log(summary[i]);
+                }
+    
+                if (summary[4][1] === '*') {
+                    console.log("Failed Doctest");
+                    failed = true;
+                } else {
+                    console.log("Passed Doctest");
+                    failed = false;
+                }
+            });
     }
 }

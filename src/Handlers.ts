@@ -74,21 +74,6 @@ export class TerminalHandler {
         vscode.window.activeTextEditor!.document.save();    // Save document before doctest is run
 		terminal.sendText(command);					        // Send command to the terminal
     }
-
-    executeForResult(command: string): string {
-        exec(command, (err, stdout, stderr) => {
-            if (err) {
-                console.log("Error: err tripped");
-            }
-
-            this.tempResult = stdout;
-        });
-        
-        let result = this.tempResult;
-        this.tempResult = "";
-
-        return result;
-    }
 }
 
 

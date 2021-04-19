@@ -24,4 +24,8 @@ export class Utils {
         console.log(text);
         this.extOutput.appendLine(text);
     }
+
+    outputCallback (output: string) {
+        
+    }
 }
