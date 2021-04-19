@@ -39,6 +39,11 @@ export class DoctestBtn {
         this.utils.dualLog("> Executing Doctest...");
     }
 
+    updateAll(activeEditor: vscode.TextEditor | undefined) {
+        this.doctestHandler(activeEditor);
+        this.linter();
+    }
+
     doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
         /*
             Get data on doctests in file and update menu and status bar accordingly.
@@ -61,8 +66,8 @@ export class DoctestBtn {
         });
     }
 
-    linter(textEditor: vscode.TextDocument) {
-        this.parser.doctestLinter(textEditor, (numFailures) => {
+    linter() {
+        this.parser.doctestLinter((numFailures) => {
             if (numFailures < 1) {
                 this.config.showDoctestStatus("passing");
             } else {

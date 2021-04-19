@@ -29,13 +29,13 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(xtraFancyButton);
 	
 	let docEditListener = vscode.workspace.onDidChangeTextDocument((docChange: vscode.TextDocumentChangeEvent) => doctestBtn.doctestHandler(vscode.window.activeTextEditor, docChange));	
-	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestBtn.doctestHandler(newTextEditor));
-	let saveListener = vscode.workspace.onDidSaveTextDocument((savedDoc: vscode.TextDocument) => doctestBtn.linter(savedDoc));
+	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestBtn.updateAll(newTextEditor));
+	let saveListener = vscode.workspace.onDidSaveTextDocument(() => doctestBtn.linter());
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 	context.subscriptions.push(saveListener);			// Listen for save of active doc.
 
-	doctestBtn.doctestHandler(vscode.window.activeTextEditor);		// Count doctests on activation.
+	doctestBtn.updateAll(vscode.window.activeTextEditor);
 }
 
 export function deactivate() {

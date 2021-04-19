@@ -66,7 +66,7 @@ export class Parser {
         callback(totalDoctests, totalDocstrings);
     }
 
-    doctestLinter(textEditor: vscode.TextDocument, callback: Utils["singleNumCallback"]) {
+    doctestLinter(callback: Utils["singleNumCallback"]) {
         /*
             Executes doctest silently and parses output.
         */
