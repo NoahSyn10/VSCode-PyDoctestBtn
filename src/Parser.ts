@@ -105,7 +105,13 @@ export class Parser {
                 }
 
                 // Find each failure and its line number.
-
+                /*
+                    TODO:
+                    Take basic functionality and:
+                        - put into proper classes
+                        - clean up redundant parts
+                        - (make it work for real)
+                */
                 let diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
                 let diagnostics : vscode.Diagnostic[] = [];
 
@@ -117,6 +123,7 @@ export class Parser {
 
                         // Get range.
                         let doc = vscode.window.activeTextEditor.document;
+                        failureLine--;
                         let failureRange = new vscode.Range(failureLine, doc.lineAt(failureLine).firstNonWhitespaceCharacterIndex,
                                                      failureLine, doc?.lineAt(failureLine).text.length);
                         
@@ -125,7 +132,11 @@ export class Parser {
                         let narrowedResults = results.slice(i);
                         for (var j = 0; j < narrowedResults.length; j++) {
                             if (narrowedResults[j].slice(0, 7) === "Trying:") {
-                                errorMsg = "*" + narrowedResults[j-1].trim() + "*";
+                                if (narrowedResults[j-4].slice(0, 9) === "Expected:") {
+                                    errorMsg = "*Expected: " + narrowedResults[j-1].trim() + "*";
+                                } else {
+                                    errorMsg = "*" + narrowedResults[j-1].trim() + "*";
+                                }
                                 break;
                             }
                         }
