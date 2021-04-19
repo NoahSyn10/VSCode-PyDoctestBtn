@@ -4,9 +4,9 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { ConfigHandler } from './ConfigHandler';
+import { ConfigHandler } from './Handlers';
+import { TerminalHandler } from './Handlers';
 import { Parser } from './Parser';
-import { TerminalHandler } from './TerminalHandler';
 import { Utils } from './Utils';
 import * as vscode from 'vscode';
 

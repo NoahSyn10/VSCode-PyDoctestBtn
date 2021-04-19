@@ -4,9 +4,9 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { ConfigHandler } from './ConfigHandler';
+import { ConfigHandler } from './Handlers';
+import { TerminalHandler } from './Handlers';
 import { Utils } from './Utils';
-import { TerminalHandler } from './TerminalHandler';
 import * as vscode from 'vscode';
 
 export class Parser {
