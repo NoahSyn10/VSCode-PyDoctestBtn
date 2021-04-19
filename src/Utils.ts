@@ -25,7 +25,7 @@ export class Utils {
         this.extOutput.appendLine(text);
     }
 
-    outputCallback (output: string) {
-        
-    }
+    singleStringCallback (output1: string) {}
+
+    doubleNumCallback (output1: number, output2: number) {}
 }
