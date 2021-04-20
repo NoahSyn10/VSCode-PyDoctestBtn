@@ -115,9 +115,9 @@ export class Parser {
                 let diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
                 let diagnostics : vscode.Diagnostic[] = [];
 
-                const results = result.split('\n').slice(0, -7);
+                const results = result.split('\n').slice(0, -6);
                 for (var i = 0; i < results.length; i++) {
-                    if (results[i].length > 60 && results[i][0] === '*') {
+                    if (results[i].length > 60 && results[i][0] === '*' && i+1 !== results.length) {
                         var failureLine = parseInt(results[i + 1].split(', ')[1].slice(5));
                         this.utils.dualLog("Doctest failure on line " + failureLine.toString());
 
@@ -128,15 +128,25 @@ export class Parser {
                                                      failureLine, doc?.lineAt(failureLine).text.length);
                         
                         // Get error message.
-                        var errorMsg = "Failure";
+                        var errorMsg = "No error message available";
                         let narrowedResults = results.slice(i);
                         for (var j = 0; j < narrowedResults.length; j++) {
                             if (narrowedResults[j].slice(0, 7) === "Trying:") {
                                 if (narrowedResults[j-4].slice(0, 9) === "Expected:") {
-                                    errorMsg = "*Expected: " + narrowedResults[j-1].trim() + "*";
+                                    errorMsg = "Expected: " + narrowedResults[j-3].trim() + "\nGot: " + narrowedResults[j-1].trim();
                                 } else {
-                                    errorMsg = "*" + narrowedResults[j-1].trim() + "*";
+                                    errorMsg = narrowedResults[j-1].trim();
                                 }
+                                break;
+                            } else if (results[j].length > 60 && results[j][0] === '*') {
+                                if (narrowedResults[j-4].slice(0, 9) === "Expected:") {
+                                    errorMsg = "found expected";
+                                    //errorMsg = "Expected: " + narrowedResults[j-7].trim() + "\nGot: " + narrowedResults[j-5].trim();
+                                } else {
+                                    errorMsg = "found ***";
+                                    //errorMsg = narrowedResults[j-5].trim();
+                                }
+                                errorMsg = "skip";
                                 break;
                             }
                         }

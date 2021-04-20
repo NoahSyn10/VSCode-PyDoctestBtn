@@ -14,7 +14,7 @@ def pythagoreanTheorem(a, b):
     >>> pythagoreanTheorem(12.45, 16.32)
     20.5267s
     >>> pythagoreanTheorem("Foo", 9) is None
-    True
+    True!
     """
     if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
         return None
@@ -22,124 +22,6 @@ def pythagoreanTheorem(a, b):
 
 def failure():
     """
-    >>> a = None
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
-    >>> a
+    s>>> a = None
     """
     
