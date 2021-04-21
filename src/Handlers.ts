@@ -82,13 +82,21 @@ export class ConfigHandler {
     */
 
     utils;
+
     doctestCount;
     doctestStatus;
 
+    diagnosticCollection;
+    diagnostics: vscode.Diagnostic[];
+
     constructor () {
         this.utils = new Utils;
+
         this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
         this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.2);
+
+        this.diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
+        this.diagnostics = [];
     }
 
     public getPaths() {
@@ -113,12 +121,20 @@ export class ConfigHandler {
 
     // Set button settings.
 
-    getDoctestCommand() {
+    getDoctestCommand(verbose?: boolean) {
         /*
             Format the doctest command to be run.
         */
+        var v = " ";
+        if (verbose === true) { v = " -v "; }
+        else if ( verbose === false ) { v = " "; }
+        else {
+            /* Get from config*/
+            v = " -v ";
+        }
+
         const paths = this.getPaths();
-        let doctestCommand = paths.python + " -m " + paths.doctest + " -v " + paths.file;
+        let doctestCommand = paths.python + " -m " + paths.doctest + v + paths.file;
         this.utils.dualLog("> Command: " + doctestCommand);
         return doctestCommand;
     }
@@ -141,9 +157,35 @@ export class ConfigHandler {
     }
 
     showDoctestStatus(status: string) {
+        /*
+            Shows the doctest status bar item with the current status.
+        */
         this.doctestStatus.text = "Status: " + status;
         this.doctestStatus.show();
     }
 
-    hideDoctestStatus() { this.doctestStatus.hide(); }
+    hideDoctestStatus() { 
+        /*
+            Hides the doctest status bar item.
+        */
+        this.doctestStatus.hide();
+    }
+
+    pushDiagnostic(range: vscode.Range, message: string) {
+        /*
+            Pushes the given diagnostic item to current diagnostics.
+        */
+        let severity = vscode.DiagnosticSeverity.Warning; // TODO: get from config
+        this.diagnostics.push(new vscode.Diagnostic(range, message, severity));
+    }
+
+    updateDiagnostics(docUri: vscode.Uri) {
+        /*
+            Resets the diagnostic collection with the current set of diagnostics.
+            Clears diagnostics.
+        */
+        this.diagnosticCollection.clear;
+        this.diagnosticCollection.set(docUri, this.diagnostics);
+        this.diagnostics = [];
+    }
 }
