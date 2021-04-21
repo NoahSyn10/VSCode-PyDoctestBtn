@@ -72,32 +72,19 @@ export class Parser {
         /*
             Parses the doctest output, creating failure objects from each failure.
         */
-        if (doctestOutput === "") { callback(0, []); return; }
+        if (doctestOutput === "") { callback(); return; }
         if (!vscode.window.activeTextEditor) { return; }
 
-        var numFailures = 0;
-        let failureList : DoctestFailure[] = [];            // List of failure objects.
         let doc = vscode.window.activeTextEditor.document;  // Active doc.
 
-        let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1);
+        let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1, -1);
 
-        outputBlocks.forEach((failure) => {
-            let failTextList = failure.split("\n").slice(1, -1);
-            // Catch and handle summary.
-            if (failTextList.length === 3 && failTextList[2][0] === "*") {
-                numFailures = parseInt(failTextList[failTextList.length-1].split(" ")[2]);
-                return;
-            }
-            // Create failure object.
-            let failureObj = new DoctestFailure(failTextList, doc);
-            // Push to failure list.
-            failureList.push(failureObj);
-
-            this.utils.dualLog("> Line " + failureObj.lineNum + ":\n  " + failureObj.errorMsg.split("\n").join("\n  "));
-
-            if (failureList.length === outputBlocks.length-1) {
-                callback(numFailures, failureList);
-            }
+        let promises = outputBlocks.map((failure) => {                  // Use promises to return result after object creation.
+            return new Promise<DoctestFailure>((resolve) => {  
+                return resolve(new DoctestFailure(failure, doc));       // Create failure object for each outputblock.
+            });
         });
+
+        Promise.all(promises).then((failureList) => { callback(failureList); });
     }
 }

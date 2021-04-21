@@ -4,7 +4,7 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { Utils } from './Utils';
+import { DoctestFailure, Utils } from './Utils';
 import * as vscode from 'vscode';
 import { config } from 'process';
 import { exec } from 'child_process';
@@ -171,12 +171,15 @@ export class ConfigHandler {
         this.doctestStatus.hide();
     }
 
-    pushDiagnostic(range: vscode.Range, message: string) {
+    pushDiagnostic(range: vscode.Range, message: string): number {
         /*
             Pushes the given diagnostic item to current diagnostics.
+            Returns the current number of diagnostics.
         */
         let severity = vscode.DiagnosticSeverity.Warning; // TODO: get from config
         this.diagnostics.push(new vscode.Diagnostic(range, message, severity));
+
+        return this.diagnostics.length;
     }
 
     updateDiagnostics(docUri: vscode.Uri) {

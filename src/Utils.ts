@@ -25,7 +25,7 @@ export class Utils {
         this.extOutput.appendLine(text);
     }
 
-    failureCallback (num: number, diag: DoctestFailure[]) {}
+    failureCallback (diag?: DoctestFailure[]) {}
 
     singleNumCallback (output1: number) {}
 
@@ -37,27 +37,29 @@ export class DoctestFailure {
         A class that encapsulates an error returned from doctest output.
     */
 
-    rawTextList;
+    rawText;
+    failTextList;
     lineNum;
     range;
     errorMsg;
 
-    constructor (failure: string[], doc: vscode.TextDocument) {
-        this.rawTextList = failure;
+    constructor (failure: string, doc: vscode.TextDocument) {
+        this.rawText = failure;
+        this.failTextList = failure.split("\n").slice(1, -1);
 
         // Get range.
-        this.lineNum = parseInt(failure[0].split(', ')[1].slice(5)) - 1;   // -1 accounts for indexing.
+        this.lineNum = parseInt(this.failTextList[0].split(', ')[1].slice(5)) - 1;   // -1 accounts for indexing.
         this.range = new vscode.Range(this.lineNum, doc.lineAt(this.lineNum).firstNonWhitespaceCharacterIndex,
                                       this.lineNum, doc?.lineAt(this.lineNum).text.length);
 
         // Get error message.
         this.errorMsg = "Error message not available";  // In case an errorMsg is (somehow) not found.
-        if (failure.length === 7) {
-            this.errorMsg = "Expected: " + failure[4].trim() + "\nGot: " + failure[6].trim();
-        } else if (failure.length === 6) {
-            this.errorMsg = "Expected: " + failure[4].trim() + "\n" + failure[5].trim();
+        if (this.failTextList.length === 7) {
+            this.errorMsg = "Expected: " + this.failTextList[4].trim() + "\nGot: " + this.failTextList[6].trim();
+        } else if (this.failTextList.length === 6) {
+            this.errorMsg = "Expected: " + this.failTextList[4].trim() + "\n" + this.failTextList[5].trim();
         } else {
-            this.errorMsg = failure[failure.length-1].trim();
+            this.errorMsg = this.failTextList[this.failTextList.length-1].trim();
         }
     }
 }
