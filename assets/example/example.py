@@ -10,7 +10,7 @@ def pythagoreanTheorem(a, b):
     >>> pythagoreanTheorem(3, 4)
     5.0
     >>> pythagoreanTheorem(6.0, 8.0)
-    10.0
+    10.0s
     >>> pythagoreanTheorem(12.45, 16.32)
     20.5267s
     >>> pythagoreanTheorem("Foo", 9) is None
@@ -22,6 +22,8 @@ def pythagoreanTheorem(a, b):
 
 def failure():
     """
-    s>>> a = None
+    >>> a = None
+    >>> a
+    >>> a = None
     """
     

@@ -54,6 +54,8 @@ export class DoctestFailure {
         this.errorMsg = "Error message not available";  // In case an errorMsg is (somehow) not found.
         if (failure.length === 7) {
             this.errorMsg = "Expected: " + failure[4].trim() + "\nGot: " + failure[6].trim();
+        } else if (failure.length === 6) {
+            this.errorMsg = "Expected: " + failure[4].trim() + "\n" + failure[5].trim();
         } else {
             this.errorMsg = failure[failure.length-1].trim();
         }

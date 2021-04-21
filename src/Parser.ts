@@ -70,22 +70,13 @@ export class Parser {
 
     doctestLinter(doctestOutput: string, callback: Utils["failureCallback"]) {
         /*
-            Executes doctest silently and parses output.
+            Parses the doctest output, creating failure objects from each failure.
         */
-        var numFailures = 0;
-
         if (!vscode.window.activeTextEditor) { return; }
 
-        // Find each failure and its line number.
-        /*
-            TODO:
-            Take basic functionality and:
-                - put into proper classes
-                - clean up redundant parts
-                - (make it work for real)
-        */
-        let failureList : DoctestFailure[] = [];
-        let doc = vscode.window.activeTextEditor.document;
+        var numFailures = 0;
+        let failureList : DoctestFailure[] = [];            // List of failure objects.
+        let doc = vscode.window.activeTextEditor.document;  // Active doc.
 
         let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1);
 
@@ -101,7 +92,7 @@ export class Parser {
             // Push to failure list.
             failureList.push(failureObj);
 
-            this.utils.dualLog("> Line " + failureObj.lineNum + ":\n  " + failureObj.errorMsg.split("\n").join("\n  ") );
+            this.utils.dualLog("> Line " + failureObj.lineNum + ":\n  " + failureObj.errorMsg.split("\n").join("\n  "));
         });
 
         callback(numFailures, failureList);

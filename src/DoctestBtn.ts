@@ -83,7 +83,6 @@ export class DoctestBtn {
                 }
 
                 failures.forEach((failure) => {
-                    this.utils.dualLog(failure.errorMsg);
                     this.config.pushDiagnostic(failure.range, failure.errorMsg);
                 });
 
