@@ -66,6 +66,30 @@
 					"light": "./assets/images/icoSvg_light_fullColor.svg",
 					"dark": "./assets/images/icoSvg_dark_fullColor.svg"
 				}
+			},
+			{
+				"command": "doctestbtn.toggleLinter",
+				"title": "Toggle doctest linting",
+				"category": "Doctest"
+			},
+			{
+				"command": "doctestbtn.toggleVerbosity",
+				"title": "Toggle doctest verbosity",
+				"category": "Doctest"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "doctestbtn.toggleLinting",
+				"key": "ctrl+alt+d",
+				"mac": "ctrl+alt+d",
+				"when": "editorLangId == python && config.doctestbtn.showButton"
+			},
+			{
+				"command": "doctestbtn.toggleVerbosity",
+				"key": "ctrl+alt+v",
+				"mac": "ctrl+alt+v",
+				"when": "editorLangId == python && config.doctestbtn.showButton"
 			}
 		],
 		"menus":  {
