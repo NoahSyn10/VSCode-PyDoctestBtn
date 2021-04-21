@@ -72,19 +72,18 @@ export class Parser {
         /*
             Parses the doctest output, creating failure objects from each failure.
         */
-        if (doctestOutput === "") { callback(); return; }
+        if (doctestOutput === "") { callback(); return; }   // Callback with no value if no output.
         if (!vscode.window.activeTextEditor) { return; }
-
-        let doc = vscode.window.activeTextEditor.document;  // Active doc.
-
-        let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1, -1);
-
-        let promises = outputBlocks.map((failure) => {                  // Use promises to return result after object creation.
+        let doc = vscode.window.activeTextEditor.document;  // Get active doc.
+        // Split output by "***" seperators. 
+        let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1, -1);    // Slice off leading '\n' and trailing summary.
+                                                                                
+        let promises = outputBlocks.map((failure) => {                              // Use promises to return result after object creation.
             return new Promise<DoctestFailure>((resolve) => {  
-                return resolve(new DoctestFailure(failure, doc));       // Create failure object for each outputblock.
+                return resolve(new DoctestFailure(failure, doc));                   // Create failure object for each output-block.
             });
         });
 
-        Promise.all(promises).then((failureList) => { callback(failureList); });
+        Promise.all(promises).then((failureList) => { callback(failureList); });    // Resolve all promises then run callback with mapped list.
     }
 }

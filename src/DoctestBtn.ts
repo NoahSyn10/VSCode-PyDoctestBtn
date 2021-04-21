@@ -77,16 +77,16 @@ export class DoctestBtn {
                 if (!vscode.window.activeTextEditor) { return; }
                 let docUri = vscode.window.activeTextEditor.document.uri;
 
-                if (!failures) {
-                    this.config.showDoctestStatus("passing");                       // Passes if no failures are returned.
+                if (!failures) {                                                    // Passes and updates if no failures are returned.
+                    this.config.showDoctestStatus("passing");                       
                     this.config.updateDiagnostics(docUri);
-                } else {
-                    this.config.showDoctestStatus(failures.length + " failures");   // Displays failures otherwise.
+                } else {                                                            // Displays and pushes failures otherwise.
+                    this.config.showDoctestStatus(failures.length + " failures");
 
-                    failures.forEach((failure) => {                                 // Pushes each failure to the diagnostics queue.
+                    failures.forEach((failure) => {                                 // Push each failure to the diagnostics queue.
                         const numPushed = this.config.pushDiagnostic(failure.range, failure.errorMsg);
                         if (failures.length === numPushed) {
-                            this.config.updateDiagnostics(docUri);                  // Updates diagnostics when all failures pushed.
+                            this.config.updateDiagnostics(docUri);                  // Update diagnostics when all failures pushed.
                         }
                     });
                 }
