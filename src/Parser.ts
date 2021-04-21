@@ -72,6 +72,7 @@ export class Parser {
         /*
             Parses the doctest output, creating failure objects from each failure.
         */
+        if (doctestOutput === "") { callback(0, []); return; }
         if (!vscode.window.activeTextEditor) { return; }
 
         var numFailures = 0;
@@ -93,8 +94,10 @@ export class Parser {
             failureList.push(failureObj);
 
             this.utils.dualLog("> Line " + failureObj.lineNum + ":\n  " + failureObj.errorMsg.split("\n").join("\n  "));
-        });
 
-        callback(numFailures, failureList);
+            if (failureList.length === outputBlocks.length-1) {
+                callback(numFailures, failureList);
+            }
+        });
     }
 }

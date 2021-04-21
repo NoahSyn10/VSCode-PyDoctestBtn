@@ -10,9 +10,9 @@ def pythagoreanTheorem(a, b):
     >>> pythagoreanTheorem(3, 4)
     5.0
     >>> pythagoreanTheorem(6.0, 8.0)
-    10.0s
+    10.0
     >>> pythagoreanTheorem(12.45, 16.32)
-    20.5267s
+    20.5267
     >>> pythagoreanTheorem("Foo", 9) is None
     True
     """
