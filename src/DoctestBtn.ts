@@ -68,25 +68,28 @@ export class DoctestBtn {
     }
 
     linter() {
-        const execCommand = this.config.getDoctestCommand(false);
+        const execCommand = this.config.getDoctestCommand(false);   // Get non-verbose doctest command. 
 
-        exec(execCommand, (err, result) => {
+        exec(execCommand, (err, result) => {                        // Excecute doctest and receive result.
             if (err) { console.log("exec err: " + err); };
 
-            this.parser.doctestLinter(result, (numFailures, failures) => {
+            this.parser.doctestLinter(result, (failures?) => {      // Pass result to the doctest linter.
                 if (!vscode.window.activeTextEditor) { return; }
+                let docUri = vscode.window.activeTextEditor.document.uri;
 
-                if (numFailures < 1) {
-                    this.config.showDoctestStatus("passing");
+                if (!failures) {
+                    this.config.showDoctestStatus("passing");                       // Passes if no failures are returned.
+                    this.config.updateDiagnostics(docUri);
                 } else {
-                    this.config.showDoctestStatus(numFailures + " failures");
+                    this.config.showDoctestStatus(failures.length + " failures");   // Displays failures otherwise.
+
+                    failures.forEach((failure) => {                                 // Pushes each failure to the diagnostics queue.
+                        const numPushed = this.config.pushDiagnostic(failure.range, failure.errorMsg);
+                        if (failures.length === numPushed) {
+                            this.config.updateDiagnostics(docUri);                  // Updates diagnostics when all failures pushed.
+                        }
+                    });
                 }
-
-                failures.forEach((failure) => {
-                    this.config.pushDiagnostic(failure.range, failure.errorMsg);
-                });
-
-                this.config.updateDiagnostics(vscode.window.activeTextEditor.document.uri);
             });
         });
     }
