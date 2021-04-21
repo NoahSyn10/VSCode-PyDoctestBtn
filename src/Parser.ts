@@ -7,9 +7,11 @@
 import { ConfigHandler } from './Handlers';
 import { TerminalHandler } from './Handlers';
 import { Utils } from './Utils';
+import { DoctestFailure } from './Utils';
 import * as vscode from 'vscode';
 import { config } from 'process';
 import { exec } from 'child_process';
+import { privateEncrypt } from 'crypto';
 
 export class Parser {
     /*
@@ -66,103 +68,42 @@ export class Parser {
         callback(totalDoctests, totalDocstrings);
     }
 
-    doctestLinter(callback: Utils["singleNumCallback"]) {
+    doctestLinter(doctestOutput: string, callback: Utils["failureCallback"]) {
         /*
             Executes doctest silently and parses output.
         */
+        var numFailures = 0;
 
-            var failed = false;
-            var numFailures = 0;
-    
-            const execCommand = this.config.getDoctestCommand();
-    
-            //vscode.window.activeTextEditor!.document.save();
+        if (!vscode.window.activeTextEditor) { return; }
 
-            exec(execCommand, (err, result) => {
-                if (err) {
-                    console.log("Error: err tripped");
-                }
+        // Find each failure and its line number.
+        /*
+            TODO:
+            Take basic functionality and:
+                - put into proper classes
+                - clean up redundant parts
+                - (make it work for real)
+        */
+        let failureList : DoctestFailure[] = [];
+        let doc = vscode.window.activeTextEditor.document;
 
-                if (!vscode.window.activeTextEditor) {
-                    return;
-                }
+        let outputBlocks = doctestOutput.split("*".repeat(70)).slice(1);
 
-                // Output last 4 lines of doctest result
-                const summary = result.split('\n').slice(-6,-1);
-                for (var i = 0; i < summary.length; i++) {
-                    console.log(summary[i]);
-                }
-    
-                // If failed, get total number of failures
-                if (summary[4][0] === '*') {
-                    console.log("Failed Doctest");
-                    failed = true;
-                    this.utils.dualLog("slice: " + summary[4].slice(18, -10));
-                    numFailures = parseInt(summary[4].slice(18, -10));
-                } else {
-                    console.log("Passed Doctest");
-                    failed = false;
-                }
+        outputBlocks.forEach((failure) => {
+            let failTextList = failure.split("\n").slice(1, -1);
+            // Catch and handle summary.
+            if (failTextList.length === 3 && failTextList[2][0] === "*") {
+                numFailures = parseInt(failTextList[failTextList.length-1].split(" ")[2]);
+                return;
+            }
+            // Create failure object.
+            let failureObj = new DoctestFailure(failTextList, doc);
+            // Push to failure list.
+            failureList.push(failureObj);
 
-                // Find each failure and its line number.
-                /*
-                    TODO:
-                    Take basic functionality and:
-                        - put into proper classes
-                        - clean up redundant parts
-                        - (make it work for real)
-                */
-                let diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
-                let diagnostics : vscode.Diagnostic[] = [];
+            this.utils.dualLog("> Line " + failureObj.lineNum + ":\n  " + failureObj.errorMsg.split("\n").join("\n  ") );
+        });
 
-                const results = result.split('\n').slice(0, -6);
-                for (var i = 0; i < results.length; i++) {
-                    if (results[i].length > 60 && results[i][0] === '*' && i+1 !== results.length) {
-                        var failureLine = parseInt(results[i + 1].split(', ')[1].slice(5));
-                        this.utils.dualLog("Doctest failure on line " + failureLine.toString());
-
-                        // Get range.
-                        let doc = vscode.window.activeTextEditor.document;
-                        failureLine--;
-                        let failureRange = new vscode.Range(failureLine, doc.lineAt(failureLine).firstNonWhitespaceCharacterIndex,
-                                                     failureLine, doc?.lineAt(failureLine).text.length);
-                        
-                        // Get error message.
-                        var errorMsg = "No error message available";
-                        let narrowedResults = results.slice(i);
-                        for (var j = 0; j < narrowedResults.length; j++) {
-                            if (narrowedResults[j].slice(0, 7) === "Trying:") {
-                                if (narrowedResults[j-4].slice(0, 9) === "Expected:") {
-                                    errorMsg = "Expected: " + narrowedResults[j-3].trim() + "\nGot: " + narrowedResults[j-1].trim();
-                                } else {
-                                    errorMsg = narrowedResults[j-1].trim();
-                                }
-                                break;
-                            } else if (results[j].length > 60 && results[j][0] === '*') {
-                                if (narrowedResults[j-4].slice(0, 9) === "Expected:") {
-                                    errorMsg = "found expected";
-                                    //errorMsg = "Expected: " + narrowedResults[j-7].trim() + "\nGot: " + narrowedResults[j-5].trim();
-                                } else {
-                                    errorMsg = "found ***";
-                                    //errorMsg = narrowedResults[j-5].trim();
-                                }
-                                errorMsg = "skip";
-                                break;
-                            }
-                        }
-
-                        // New Diagnostic.
-                        diagnostics.push(new vscode.Diagnostic(failureRange, errorMsg, vscode.DiagnosticSeverity.Warning));
-                    }
-                }
-
-                // Push diagnostics
-                this.utils.dualLog(diagnostics.toString());
-                if (vscode.window.activeTextEditor) {
-                    diagnosticCollection.set(vscode.window.activeTextEditor?.document.uri, diagnostics);
-                }
-
-                callback(numFailures);
-            });
+        callback(numFailures, failureList);
     }
 }

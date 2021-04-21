@@ -4,6 +4,7 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
+import { exec } from 'child_process';
 import { ConfigHandler } from './Handlers';
 import { TerminalHandler } from './Handlers';
 import { Parser } from './Parser';
@@ -67,12 +68,27 @@ export class DoctestBtn {
     }
 
     linter() {
-        this.parser.doctestLinter((numFailures) => {
-            if (numFailures < 1) {
-                this.config.showDoctestStatus("passing");
-            } else {
-                this.config.showDoctestStatus(numFailures + " failures");
-            }
+        const execCommand = this.config.getDoctestCommand(false);
+
+        exec(execCommand, (err, result) => {
+            if (err) { console.log("exec err: " + err); };
+
+            this.parser.doctestLinter(result, (numFailures, failures) => {
+                if (!vscode.window.activeTextEditor) { return; }
+
+                if (numFailures < 1) {
+                    this.config.showDoctestStatus("passing");
+                } else {
+                    this.config.showDoctestStatus(numFailures + " failures");
+                }
+
+                failures.forEach((failure) => {
+                    this.utils.dualLog(failure.errorMsg);
+                    this.config.pushDiagnostic(failure.range, failure.errorMsg);
+                });
+
+                this.config.updateDiagnostics(vscode.window.activeTextEditor.document.uri);
+            });
         });
     }
 }
