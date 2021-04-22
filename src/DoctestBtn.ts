@@ -32,10 +32,12 @@ export class DoctestBtn {
     execDoctest() {
         /*
             Excecutes the doctest command in the main terminal.
+            Force-shows the terminal if it is hidden.
         */
-        let terminal = this.terminalHandler.getMainTerminal();
-        let doctestCommand = this.config.getDoctestCommand();
-        this.terminalHandler.executeInTerminal(terminal, doctestCommand);
+        let terminal = this.terminalHandler.getMainTerminal();              // Retreive 'main' terminal.
+        let doctestCommand = this.config.getDoctestCommand();               // Retreive formatted doctest command.
+        terminal.show();                                                    // Force show terminal.
+        this.terminalHandler.executeInTerminal(terminal, doctestCommand);   // Execute the command in terminal.
 
         this.utils.dualLog("> Executing Doctest...");
     }
