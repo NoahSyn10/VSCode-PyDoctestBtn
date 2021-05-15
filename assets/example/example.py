@@ -22,8 +22,9 @@ def pythagoreanTheorem(a, b):
 
 def failure():
     """
-    >>> a = None
-    >>> a
-    >>> a = None
+    >>> None
+    >>> s
+    >>> 5*4
+    18
     """
     

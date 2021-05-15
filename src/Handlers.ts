@@ -93,7 +93,7 @@ export class ConfigHandler {
         this.utils = new Utils;
 
         this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
-        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.2);
+        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
 
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
         this.diagnostics = [];

@@ -30,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 	
 	let docEditListener = vscode.workspace.onDidChangeTextDocument((docChange: vscode.TextDocumentChangeEvent) => doctestBtn.doctestHandler(vscode.window.activeTextEditor, docChange));	
 	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => doctestBtn.updateAll(newTextEditor));
-	let saveListener = vscode.workspace.onDidSaveTextDocument(() => doctestBtn.linter());
+	let saveListener = vscode.workspace.onDidSaveTextDocument(() => doctestBtn.updateAll(undefined));
 	context.subscriptions.push(docEditListener);		// Listen for edits to active doc.
 	context.subscriptions.push(editorSwitchListener);	// Listen for change of active doc.
 	context.subscriptions.push(saveListener);			// Listen for save of active doc.

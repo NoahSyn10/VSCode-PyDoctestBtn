@@ -21,12 +21,14 @@ export class DoctestBtn {
     parser;
     terminalHandler;
     utils;
-
+    showStatus;
+    
     constructor () {
         this.config = new ConfigHandler;
         this.parser = new Parser;
         this.terminalHandler = new TerminalHandler;
         this.utils = new Utils;
+        this.showStatus = new Boolean;
     }
 
     execDoctest() {
@@ -43,8 +45,8 @@ export class DoctestBtn {
     }
 
     updateAll(activeEditor: vscode.TextEditor | undefined) {
-        this.doctestHandler(activeEditor);
         this.linter();
+        this.doctestHandler(activeEditor);
     }
 
     doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
@@ -61,10 +63,13 @@ export class DoctestBtn {
             if (totalDoctests > 0) {			
                 this.utils.dualLog("> " + totalDoctests + " doctests found.");		// If there are doctests, show button and status bar items.                                                       
                 this.config.showDoctestBtn(totalDoctests);
+                this.showStatus = true;
         
             } else {							                                    // If there are none, hide the button and status bar items.            
                 this.utils.dualLog("> No doctests found.");
                 this.config.hideDoctestBtn();
+                this.config.hideDoctestStatus();
+                this.showStatus = false;
             }
         });
     }
@@ -79,12 +84,15 @@ export class DoctestBtn {
                 if (!vscode.window.activeTextEditor) { return; }
                 let docUri = vscode.window.activeTextEditor.document.uri;
 
-                if (!failures) {                                                    // Passes and updates if no failures are returned.
-                    this.config.showDoctestStatus("passing");                       
+                if (!failures) {
+                    if (this.showStatus) {                                                    // Passes and updates if no failures are returned.
+                        this.config.showDoctestStatus("passing");  
+                    }                     
                     this.config.updateDiagnostics(docUri);
                 } else {                                                            // Displays and pushes failures otherwise.
-                    this.config.showDoctestStatus(failures.length + " failures");
-
+                    if (this.showStatus) {
+                        this.config.showDoctestStatus(failures.length + " failures");
+                    }
                     failures.forEach((failure) => {                                 // Push each failure to the diagnostics queue.
                         const numPushed = this.config.pushDiagnostic(failure.range, failure.errorMsg);
                         if (failures.length === numPushed) {
