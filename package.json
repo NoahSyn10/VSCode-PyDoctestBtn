@@ -141,7 +141,7 @@
 				"default": "false",
 				"markdownDescription": "Use orange + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
 			  },
-			  "doctestbtn.z-misc.showButton": {
+			  "doctestbtn.showButton": {
 				"type": "boolean",
 				"default": "false",
 				"markdownDescription": "Updates dynamically based on currently open code. (Any changes will be overrided later)"

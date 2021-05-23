@@ -68,9 +68,10 @@ export class DoctestBtn {
         /*
             Get data on doctests in file and update menu and status bar accordingly.
         */
-        if ((docChange && docChange?.document.fileName !== activeEditor?.document.fileName) || activeEditor?.document.languageId !== "python") {
-            this.hideAll();
-            return;													                // Check if change was in the active editor & if the editor is a .py file
+        if (docChange && docChange?.document.fileName !== activeEditor?.document.fileName) {
+            return;     // Check if change was in the active editor.
+        } else if (activeEditor?.document.languageId !== "python") {
+            return;     // Check if active file is a .py file.
         }
         
         this.utils.dualLog("> Scanning file for doctests...");
