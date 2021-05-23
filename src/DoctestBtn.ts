@@ -70,9 +70,12 @@ export class DoctestBtn {
         */
         if (docChange && docChange?.document.fileName !== activeEditor?.document.fileName) {
             return;     // Check if change was in the active editor.
+        } else if (vscode.window.activeTextEditor?.document.languageId !== "python") {
+            this.hideAll();     // Check if active file is a .py file.
+            return;
         } else if (activeEditor?.document.languageId !== "python") {
-            return;     // Check if active file is a .py file.
-        }
+            return;     // Check if changed file is a .py file.
+        } 
         
         this.utils.dualLog("> Scanning file for doctests...");
 

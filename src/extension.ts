@@ -65,6 +65,7 @@ export function readConfig(dtBtnObj : DoctestBtn) {
 	}
 
 	let lintCondition = config.getLinterConfig();
+	// switch statement here!
 }
 
 export function deactivate() {
