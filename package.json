@@ -141,7 +141,7 @@
 				"default": "false",
 				"markdownDescription": "Use orange + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
 			  },
-			  "doctestbtn.showButton": {
+			  "doctestbtn.z-misc.showButton": {
 				"type": "boolean",
 				"default": "false",
 				"markdownDescription": "Updates dynamically based on currently open code. (Any changes will be overrided later)"
@@ -150,6 +150,27 @@
 				"type": "string",
 				"default": "doctest",
 				"description": "Path to doctest module, you can use a custom module by editing this feild."
+			  },
+
+			  "doctestbtn.statusBar.showDoctestCount" : {
+				"type": "boolean",
+				"default": "true",
+				"description": "Display the number of doctests in the active document in the status bar."
+			 },
+			 "doctestbtn.statusBar.showDoctestStatus" : {
+				"type": "boolean",
+				"default": "true",
+				"description": "Display the status of the current doctests if linting is enabled. (passing or # failed)"
+			},
+			  "doctestbtn.config.lintCondition" : {
+				  "type": "string",
+				  "default": "On Save",
+				  "enum": ["Never", "On Save", "On Change"],
+				  "enumDescriptions": [
+					  "Do not lint doctests in files.",
+					  "Run linting on every save event.",
+					  "Run linting on every change. (realtime)"
+				  ]
 			  }
 			}
 		  }

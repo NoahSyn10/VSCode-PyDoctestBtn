@@ -21,14 +21,20 @@ export class DoctestBtn {
     parser;
     terminalHandler;
     utils;
-    showStatus;
+
+    dtCountEnabled;
+    dtStatusEnabled;
+    showStatusBarItems;
     
     constructor () {
         this.config = new ConfigHandler;
         this.parser = new Parser;
         this.terminalHandler = new TerminalHandler;
         this.utils = new Utils;
-        this.showStatus = new Boolean;
+
+        this.dtCountEnabled = new Boolean;
+        this.dtStatusEnabled = new Boolean;
+        this.showStatusBarItems = new Boolean;
     }
 
     execDoctest() {
@@ -49,11 +55,21 @@ export class DoctestBtn {
         this.doctestHandler(activeEditor);
     }
 
+    hideAll() {
+        /*
+            Hide all workspace related items.
+        */
+        this.config.hideDoctestBtn();
+        this.config.hideDoctestCount();
+        this.config.hideDoctestStatus();
+    }
+
     doctestHandler(activeEditor: vscode.TextEditor | undefined, docChange?: vscode.TextDocumentChangeEvent): void {
         /*
             Get data on doctests in file and update menu and status bar accordingly.
         */
         if ((docChange && docChange?.document.fileName !== activeEditor?.document.fileName) || activeEditor?.document.languageId !== "python") {
+            this.hideAll();
             return;													                // Check if change was in the active editor & if the editor is a .py file
         }
         
@@ -62,14 +78,15 @@ export class DoctestBtn {
         this.parser.countDoctests(activeEditor, (totalDoctests, totalDocstrings) => {
             if (totalDoctests > 0) {			
                 this.utils.dualLog("> " + totalDoctests + " doctests found.");		// If there are doctests, show button and status bar items.                                                       
-                this.config.showDoctestBtn(totalDoctests);
-                this.showStatus = true;
-        
+                this.config.showDoctestBtn();
+                if (this.dtCountEnabled) {
+                    this.config.showDoctestCount(totalDoctests);
+                    this.showStatusBarItems = true;
+                }
             } else {							                                    // If there are none, hide the button and status bar items.            
                 this.utils.dualLog("> No doctests found.");
-                this.config.hideDoctestBtn();
-                this.config.hideDoctestStatus();
-                this.showStatus = false;
+                this.hideAll();
+                this.showStatusBarItems = false;
             }
         });
     }
@@ -85,12 +102,12 @@ export class DoctestBtn {
                 let docUri = vscode.window.activeTextEditor.document.uri;
 
                 if (!failures) {
-                    if (this.showStatus) {                                                    // Passes and updates if no failures are returned.
+                    if (this.showStatusBarItems && this.dtStatusEnabled) {                                                    // Passes and updates if no failures are returned.
                         this.config.showDoctestStatus("passing");  
                     }                     
                     this.config.updateDiagnostics(docUri);
                 } else {                                                            // Displays and pushes failures otherwise.
-                    if (this.showStatus) {
+                    if (this.showStatusBarItems && this.dtStatusEnabled) {
                         this.config.showDoctestStatus(failures.length + " failures");
                     }
                     failures.forEach((failure) => {                                 // Push each failure to the diagnostics queue.

@@ -9,6 +9,7 @@ import { eventNames, stderr } from 'process';
 import * as vscode from 'vscode';
 
 import { DoctestBtn } from './DoctestBtn';
+import { ConfigHandler } from './Handlers';
 import { Utils } from './Utils';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -18,6 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
 	*/
 	let doctestBtn = new DoctestBtn;
 	let utils = new Utils;
+
+	readConfig(doctestBtn);
+	let configListener = vscode.workspace.onDidChangeConfiguration(() => readConfig(doctestBtn));
+	context.subscriptions.push(configListener);
 
 	utils.dualLog('> DoctestBtn active');
 
@@ -36,6 +41,30 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(saveListener);			// Listen for save of active doc.
 
 	doctestBtn.updateAll(vscode.window.activeTextEditor);
+}
+
+export function readConfig(dtBtnObj : DoctestBtn) {
+	/*
+		Retrieve config values and adjust functionality accordingly.
+	*/
+	let config = new ConfigHandler;
+
+	// Status Bar Configurations
+	let statusBarConfig = config.getStatusbarConfig();
+	if (statusBarConfig.dtCountConfig) { 
+		dtBtnObj.dtCountEnabled = true; 
+	} else { 
+		dtBtnObj.dtCountEnabled = false; 
+		dtBtnObj.config.hideDoctestCount();
+	}
+	if (statusBarConfig.dtStatusConfig) {
+		dtBtnObj.dtStatusEnabled = true;
+	} else {
+		dtBtnObj.dtStatusEnabled = false;
+		dtBtnObj.config.hideDoctestStatus();
+	}
+
+	let lintCondition = config.getLinterConfig();
 }
 
 export function deactivate() {

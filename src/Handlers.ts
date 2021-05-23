@@ -117,10 +117,6 @@ export class ConfigHandler {
                 "file": filePath};
     }
 
-    // Get button settings.
-
-    // Set button settings.
-
     getDoctestCommand(verbose?: boolean) {
         /*
             Format the doctest command to be run.
@@ -139,13 +135,30 @@ export class ConfigHandler {
         return doctestCommand;
     }
 
-    showDoctestBtn(totalDoctests: Number) {
+    getStatusbarConfig() {
+        /*
+            Return the boolean values for the status bar configuration options.
+        */
+        var dtCountConfig = vscode.workspace.getConfiguration('doctestbtn').statusBar.showDoctestCount;
+        var dtStatusConfig = vscode.workspace.getConfiguration('doctestbtn').statusBar.showDoctestStatus;
+
+        return { dtCountConfig, dtStatusConfig };
+    }
+
+    getLinterConfig() {
+        /*
+            Return the string value for the doctest linting configuration.
+        */
+        var lintCondition = vscode.workspace.getConfiguration('doctestbtn').statusBar.lintCondition;
+
+        return lintCondition;
+    }
+
+    showDoctestBtn() {
         /*
             Makes the doctest button and status bar counter visible after setting counter to given count.
         */
         vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-        this.doctestCount.text = "Doctests: " + totalDoctests;
-        this.doctestCount.show();
     }
 
     hideDoctestBtn() {
@@ -153,6 +166,20 @@ export class ConfigHandler {
             Hides the doctest button and status bar counter.
         */
         vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
+    }
+
+    showDoctestCount(totalDoctests: Number) {
+        /*
+            Shows the doctest count status bar item.
+        */ 
+        this.doctestCount.text = "Doctests: " + totalDoctests;
+        this.doctestCount.show();
+    }
+
+    hideDoctestCount() {
+        /*
+            Hides the doctest count status bar item.
+        */ 
         this.doctestCount.hide();
     }
 
