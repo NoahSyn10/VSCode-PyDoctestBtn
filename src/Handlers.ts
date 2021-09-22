@@ -105,7 +105,7 @@ export class ConfigHandler {
         */
         const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable.
         const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module.
-        const filePath = vscode.window.activeTextEditor?.document.fileName;						// Retrieve path of current file (to be doctested).
+        const filePath = this.getFilePath();													// Retrieve path of current file (to be doctested).
     
         this.utils.dualLog("> Retrieving paths..." + 
                          "\n> Python: " + pythonPath + 
@@ -115,6 +115,20 @@ export class ConfigHandler {
         return {"python": pythonPath,
                 "doctest": doctestPath,
                 "file": filePath};
+    }
+
+    private getFilePath() {
+        /*
+            Return the file path of the current file.
+        */
+       var filePath = vscode.window.activeTextEditor!.document.fileName;
+       
+       // Add quotes if file path contains spaces.
+       if (filePath.includes(" ")) {
+           filePath = "\"" + filePath + "\"";
+       }
+
+       return filePath;
     }
 
     getDoctestCommand(verbose?: boolean) {
