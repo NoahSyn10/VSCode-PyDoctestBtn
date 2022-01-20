@@ -79,6 +79,12 @@ N/A
 
 ## Release Notes
 
+## v1.0.4 - 2022-01-20
+
+* Add quotes around the filename 
+  * Fixes errors when dealing with a filename containing spaces
+  * Thanks to logonoff: https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues/5
+
 ### v1.0.3 - 2021-04-08
 
 * Fixes for changes made in the VSCode March 2021 release.
