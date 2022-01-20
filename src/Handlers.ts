@@ -130,7 +130,7 @@ export class ConfigHandler {
         }
 
         const paths = this.getPaths();
-        let doctestCommand = paths.python + " -m " + paths.doctest + v + paths.file;
+        let doctestCommand = paths.python + " -m " + paths.doctest + v + "\"" + paths.file + "\"";
         this.utils.dualLog("> Command: " + doctestCommand);
         return doctestCommand;
     }
