@@ -4,6 +4,11 @@ All notable changes to the "PyDoctestBtn" extension will be documented in this f
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v1.0.4 - 2022-01-20
+### Quick Fix
+* Add quotes around the filename to fix errors when dealing with a filename containing spaces
+* Thanks to logonoff: https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues/5
+
 ## v1.0.3 - 2021-04-08
 ### Fixes for changes made in the VSCode March 2021 release.
   * Fix for change in title 'groups' that caused the doctestBtn to fail to appear.
