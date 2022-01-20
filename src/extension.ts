@@ -65,7 +65,20 @@ export function readConfig(dtBtnObj : DoctestBtn) {
 	}
 
 	let lintCondition = config.getLinterConfig();
-	// switch statement here!
+	switch(lintCondition) {
+		case "Never": {
+			
+			break;
+		}
+		case "On Save": {
+
+			break;
+		}
+		case "On Change": {
+
+			break;
+		}
+	}
 }
 
 export function deactivate() {
