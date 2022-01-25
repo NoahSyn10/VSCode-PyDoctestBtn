@@ -40,7 +40,7 @@ DoctestBtn is a simple VSCode extension that aims to replicate the ease of use o
   
 - - -
 
-## Extension Settings
+## Extension Settings   
 
 This extension contributes the following settings:
 
