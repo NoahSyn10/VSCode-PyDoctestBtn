@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function readConfig(dtBtnObj : DoctestBtn) {
 	/*
-		Retrieve config values and adjust functionality accordingly.
+		Retrieve config values and adjust functionality accordingly
 	*/
 	let config = new ConfigHandler;
 
