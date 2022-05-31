@@ -103,7 +103,7 @@ export class ConfigHandler {
         /*
             Retrieves the paths for the executables to be used and the current file, and returns them as an object.
         */
-        const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable.
+        const pythonPath = vscode.workspace.getConfiguration('python').defaultInterpreterPath;				// Retrieve path for python executable.
         const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module.
         const filePath = vscode.window.activeTextEditor?.document.fileName;						// Retrieve path of current file (to be doctested).
     
