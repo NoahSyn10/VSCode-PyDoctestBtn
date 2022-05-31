@@ -65,7 +65,7 @@ function findTerminal(termName: String): number {
 
 function execDoctest(terminal: vscode.Terminal) {
 	if (vscode.window.activeTextEditor) {
-		const pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
+		const pythonPath = vscode.workspace.getConfiguration('python').defaultInterpreterPath;				// Retrieve path for python executable
 		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 
