@@ -79,10 +79,10 @@ N/A
 
 ## Release Notes
 
-## v1.0.5 - 2022-05-31
+## v1.0.7 - 2022-06-01
 
-* Update pythonpath settings ID from 'python.pythonPath' to 'python.defaultInterpreterPath'
-  * Fixes an issue where certain operating systems printed 'undefined' rather than the python path
+* Update pythonpath retrieval to search elsewhere, and then fall back on an editable setting (`dtPythonPath`).
+  * Helps fix an issue where certain operating systems printed 'undefined' rather than the python path
   * Thanks to jguerra-astro and Paul-Durrant: https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues/7
 
 ## v1.0.4 - 2022-01-20
