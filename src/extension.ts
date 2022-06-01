@@ -2,6 +2,7 @@
 // © 2021 Noah Synowiec noahsyn1@gmail.com
 
 import * as vscode from 'vscode';
+import { Utility } from './utility';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -65,7 +66,10 @@ function findTerminal(termName: String): number {
 
 function execDoctest(terminal: vscode.Terminal) {
 	if (vscode.window.activeTextEditor) {
-		const pythonPath = vscode.workspace.getConfiguration('python').defaultInterpreterPath;				// Retrieve path for python executable
+		let pythonPath = vscode.workspace.getConfiguration('python').pythonPath;				// Retrieve path for python executable
+		if (pythonPath === "undefined") {														// First try python.pythonPath, then use util
+			pythonPath = Utility.getPythonPath(vscode.window.activeTextEditor.document);
+		}
 		const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;															// Retrieve path for the doctest module
 		const filePath = vscode.window.activeTextEditor.document.fileName;						// Retrieve path of current tile (to be doctested)
 

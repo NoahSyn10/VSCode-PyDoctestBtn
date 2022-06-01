@@ -1,7 +1,7 @@
 {
 	"name": "pydoctestbtn",
 	"displayName": "Python DoctestBtn",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"publisher": "NoahSyn10",
 	"description": "Python DoctestBtn - a simple extension that aims to make running Python Doctests as easy as clicking a button.",
 	"author": {
@@ -120,6 +120,11 @@
 				"type": "string",
 				"default": "doctest",
 				"description": "Path to doctest module, you can use a custom module by editing this feild."
+			  },
+			  "doctestbtn.dtPythonPath": {
+				"type": "string",
+				"default": "python",
+				"description": "Path to python interpereter, change if a different interpereter path is needed."
 			  }
 			}
 		  }
