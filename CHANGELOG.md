@@ -4,6 +4,12 @@ All notable changes to the "PyDoctestBtn" extension will be documented in this f
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## v1.0.5 - 2022-05-31
+### Quick Fix
+* Update pythonpath settings ID from 'python.pythonPath' to 'python.defaultInterpreterPath'
+* Fixes an issue where certain operating systems printed 'undefined' rather than the python path
+* Thanks to jguerra-astro and Paul-Durrant: https://github.com/NoahSyn10/VSCode-PyDoctestBtn/issues/7
+
 ## v1.0.4 - 2022-01-20
 ### Quick Fix
 * Add quotes around the filename to fix errors when dealing with a filename containing spaces
