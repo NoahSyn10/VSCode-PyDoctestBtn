@@ -4,7 +4,7 @@ All notable changes to the "PyDoctestBtn" extension will be documented in this f
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## v1.0.6 - 2022-06-06
+## v1.0.7 - 2022-06-06
 ### Quick Fix
 * Update pythonpath retrieval to search elsewhere, and then fall back on an editable setting.
 * Fixes an issue where certain operating systems printed 'undefined' rather than the python path
