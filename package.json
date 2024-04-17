@@ -27,7 +27,7 @@
 	"galleryBanner": {
 		"color": "#2b2b2b",
 		"theme": "dark"
-	  },
+	},
 	"extensionDependencies": [
 		"ms-python.python"
 	],
@@ -92,7 +92,7 @@
 				"when": "editorLangId == python && config.doctestbtn.showButton"
 			}
 		],
-		"menus":  {
+		"menus": {
 			"commandPalette": [
 				{
 					"command": "doctestbtn.execDoctest_plain",
@@ -112,9 +112,9 @@
 			],
 			"editor/title": [
 				{
-				  "when": "config.doctestbtn.showButton && editorLangId == python && !config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
-				  "command": "doctestbtn.execDoctest_plain",
-				  "group": "navigation"
+					"when": "config.doctestbtn.showButton && editorLangId == python && !config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
+					"command": "doctestbtn.execDoctest_plain",
+					"group": "navigation"
 				},
 				{
 					"when": "config.doctestbtn.showButton && editorLangId == python && config.doctestbtn.buttonColor.fancy && !config.doctestbtn.buttonColor.xtraFancy",
@@ -126,54 +126,57 @@
 					"command": "doctestbtn.execDoctest_xtraFancy",
 					"group": "navigation"
 				}
-			  ]
+			]
 		},
 		"configuration": {
 			"title": "DoctestBtn",
 			"properties": {
-			  "doctestbtn.buttonColor.fancy": {
-				"type": "boolean",
-				"default": "false",
-				"markdownDescription": "Use black/white + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
-			  },
-			  "doctestbtn.buttonColor.xtraFancy": {
-				"type": "boolean",
-				"default": "false",
-				"markdownDescription": "Use orange + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
-			  },
-			  "doctestbtn.showButton": {
-				"type": "boolean",
-				"default": "false",
-				"markdownDescription": "Updates dynamically based on currently open code. (Any changes will be overrided later)"
-			  },
-			  "doctestbtn.doctestPath": {
-				"type": "string",
-				"default": "doctest",
-				"description": "Path to doctest module, you can use a custom module by editing this feild."
-			  },
-
-			  "doctestbtn.statusBar.showDoctestCount" : {
-				"type": "boolean",
-				"default": "true",
-				"description": "Display the number of doctests in the active document in the status bar."
-			 },
-			 "doctestbtn.statusBar.showDoctestStatus" : {
-				"type": "boolean",
-				"default": "true",
-				"description": "Display the status of the current doctests if linting is enabled. (passing or # failed)"
-			},
-			  "doctestbtn.config.lintCondition" : {
-				  "type": "string",
-				  "default": "On Save",
-				  "enum": ["Never", "On Save", "On Change"],
-				  "enumDescriptions": [
-					  "Do not lint doctests in files.",
-					  "Run linting on every save event.",
-					  "Run linting on every change. (realtime)"
-				  ]
-			  }
+				"doctestbtn.buttonColor.fancy": {
+					"type": "boolean",
+					"default": "false",
+					"markdownDescription": "Use black/white + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
+				},
+				"doctestbtn.buttonColor.xtraFancy": {
+					"type": "boolean",
+					"default": "false",
+					"markdownDescription": "Use orange + blue button. [Comparison](https://raw.githubusercontent.com/NoahSyn10/VSCode-PyDoctestBtn/main/assets/example/BtnComparison.png)"
+				},
+				"doctestbtn.showButton": {
+					"type": "boolean",
+					"default": "false",
+					"markdownDescription": "Updates dynamically based on currently open code. (Any changes will be overrided later)"
+				},
+				"doctestbtn.doctestPath": {
+					"type": "string",
+					"default": "doctest",
+					"description": "Path to doctest module, you can use a custom module by editing this feild."
+				},
+				"doctestbtn.statusBar.showDoctestCount": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Display the number of doctests in the active document in the status bar."
+				},
+				"doctestbtn.statusBar.showDoctestStatus": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Display the status of the current doctests if linting is enabled. (passing or # failed)"
+				},
+				"doctestbtn.config.lintCondition": {
+					"type": "string",
+					"default": "On Save",
+					"enum": [
+						"Never",
+						"On Save",
+						"On Change"
+					],
+					"enumDescriptions": [
+						"Do not lint doctests in files.",
+						"Run linting on every save event.",
+						"Run linting on every change. (realtime)"
+					]
+				}
 			}
-		  }
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -184,16 +187,19 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.52.0",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.0.4",
 		"@types/node": "^12.11.7",
-		"eslint": "^7.15.0",
+		"@types/vscode": "^1.52.0",
 		"@typescript-eslint/eslint-plugin": "^4.9.0",
 		"@typescript-eslint/parser": "^4.9.0",
+		"eslint": "^7.15.0",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
 		"typescript": "^4.1.2",
 		"vscode-test": "^1.4.1"
+	},
+	"dependencies": {
+		"vscode": "^1.1.37"
 	}
 }
