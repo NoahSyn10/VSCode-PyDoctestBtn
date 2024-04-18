@@ -1,8 +1,8 @@
-/*
-    PyDoctestBtn
-    DoctestBtn Class
-    © 2021 Noah Synowiec - noahsyn1@gmail.com
-*/
+/**
+ * PyDoctestBtn
+ * DoctestBtn Class
+ * © 2021 Noah Synowiec - noahsyn1@gmail.com
+ */
 
 import { exec } from "child_process";
 import { ConfigHandler } from "./Handlers";

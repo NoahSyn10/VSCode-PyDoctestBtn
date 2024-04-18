@@ -4,218 +4,225 @@
     © 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
-import { DoctestFailure, Utils } from './Utils';
-import * as vscode from 'vscode';
-import { config } from 'process';
-import { exec } from 'child_process';
+import { DoctestFailure, Utils } from "./Utils";
+import * as vscode from "vscode";
+import { config } from "process";
+import { exec } from "child_process";
 
 export class TerminalHandler {
-    /*
+	/*
         A class containing methods related to the retrieval and use of integrated terminals.
     */
 
-    utils;
-    tempResult;
+	utils;
+	tempResult;
 
-    constructor () {
-        this.utils = new Utils;
-        this.tempResult = "";
-    }
+	constructor() {
+		this.utils = new Utils();
+		this.tempResult = "";
+	}
 
-    findTerminal(termName: String): number {
-        /*
+	findTerminal(termName: String): number {
+		/*
             Searches for an open terminal with the given 'termName' as its name.
             Returns the index of the terminal if found, -1 otherwise.
         */
-        const terminals = vscode.window.terminals;			// Get list of active terminals.
-        for (let i = 0; i < terminals.length; i++) {
-            if (terminals[i].name === termName) {			// Check each list for provided name.
-                return i;									// Return index if found.
-            }
-        }
-        return -1;											// Return -1 otherwise.
-    }
+		const terminals = vscode.window.terminals; // Get list of active terminals.
+		for (let i = 0; i < terminals.length; i++) {
+			if (terminals[i].name === termName) {
+				// Check each list for provided name.
+				return i; // Return index if found.
+			}
+		}
+		return -1; // Return -1 otherwise.
+	}
 
-    getMainTerminal(): vscode.Terminal {
-        /*
+	getMainTerminal(): vscode.Terminal {
+		/*
             Returns the terminal with highest 'priority', and creates one if none exists.
             Priority levels by terminal name:
             - 'Python'
             - 'Doctest'
             - Any other open terminal
         */
-        const terminals = vscode.window.terminals;              // Get list of active terminals.
+		const terminals = vscode.window.terminals; // Get list of active terminals.
 
-        this.utils.dualLog("> Retrieving main terminal...");
+		this.utils.dualLog("> Retrieving main terminal...");
 
-        if (this.findTerminal("Python") > -1) {                 // Check for "Python" terminal.
-            this.utils.dualLog("> Python terminal found.");
-            return terminals[this.findTerminal("Python")];      
+		if (this.findTerminal("Python") > -1) {
+			// Check for "Python" terminal.
+			this.utils.dualLog("> Python terminal found.");
+			return terminals[this.findTerminal("Python")];
+		} else if (this.findTerminal("Doctest") > -1) {
+			// Check for "Doctest" terminal.
+			this.utils.dualLog("> Doctest terminal found.");
+			return terminals[this.findTerminal("Doctest")];
+		} else if (vscode.window.activeTerminal) {
+			//  If neither exists check for any active terminal.
+			this.utils.dualLog("> Active terminal '" + vscode.window.activeTerminal.name + "' found.");
+			return vscode.window.activeTerminal;
+		} else {
+			// If no terminal exists, create "Doctest" terminal.
+			this.utils.dualLog("> Doctest terminal created.");
+			return vscode.window.createTerminal("Doctest");
+		}
+	}
 
-        } else if (this.findTerminal("Doctest") > -1) {         // Check for "Doctest" terminal.
-            this.utils.dualLog("> Doctest terminal found.");
-            return terminals[this.findTerminal("Doctest")];        
-
-        } else if (vscode.window.activeTerminal) {	            //  If neither exists check for any active terminal.
-            this.utils.dualLog("> Active terminal '" + vscode.window.activeTerminal.name + "' found.");
-            return vscode.window.activeTerminal;
-
-        } else {                                                // If no terminal exists, create "Doctest" terminal.
-            this.utils.dualLog("> Doctest terminal created.");
-            return vscode.window.createTerminal("Doctest");     
-        }	
-    }    
-
-    executeInTerminal(terminal: vscode.Terminal, command: string) {
-        /*
+	executeInTerminal(terminal: vscode.Terminal, command: string) {
+		/*
             Execute given string in given terminal, after saving active document.
         */
-        this.utils.dualLog("> Executing command '" + command.slice(0, 5) + "...' in terminal '" + terminal.name + "'");
-        vscode.window.activeTextEditor!.document.save();    // Save document before command is run
-		terminal.sendText(command);					        // Send command to the terminal
-    }
+		this.utils.dualLog("> Executing command '" + command.slice(0, 5) + "...' in terminal '" + terminal.name + "'");
+		vscode.window.activeTextEditor!.document.save(); // Save document before command is run
+		terminal.sendText(command); // Send command to the terminal
+	}
 }
 
 export class ConfigHandler {
-    /*
+	/*
         A class holding methods for getting and setting configurations.
     */
 
-    utils;
+	utils;
 
-    doctestCount;
-    doctestStatus;
+	doctestCount;
+	doctestStatus;
 
-    diagnosticCollection;
-    diagnostics: vscode.Diagnostic[];
+	diagnosticCollection;
+	diagnostics: vscode.Diagnostic[];
 
-    constructor () {
-        this.utils = new Utils;
+	constructor() {
+		this.utils = new Utils();
 
-        this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
-        this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
+		this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
+		this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
 
-        this.diagnosticCollection = vscode.languages.createDiagnosticCollection('go');
-        this.diagnostics = [];
-    }
+		this.diagnosticCollection = vscode.languages.createDiagnosticCollection("go");
+		this.diagnostics = [];
+	}
 
-    public getPaths() {
-        /*
+	public getPaths() {
+		/*
             Retrieves the paths for the executables to be used and the current file, and returns them as an object.
         */
-        const pythonPath = vscode.workspace.getConfiguration('python').defaultInterpreterPath;				// Retrieve path for python executable.
-        const doctestPath = vscode.workspace.getConfiguration('doctestbtn').doctestPath;		// Retrieve path for the doctest module.
-        const filePath = vscode.window.activeTextEditor?.document.fileName;						// Retrieve path of current file (to be doctested).
-    
-        this.utils.dualLog("> Retrieving paths..." + 
-                         "\n> Python: " + pythonPath + 
-                         "\n> Doctest: " + doctestPath + 
-                         "\n> Doctest: " + doctestPath);
+		const pythonPath = vscode.workspace.getConfiguration("python").defaultInterpreterPath; // Retrieve path for python executable.
+		const doctestPath = vscode.workspace.getConfiguration("doctestbtn").doctestPath; // Retrieve path for the doctest module.
+		const filePath = vscode.window.activeTextEditor?.document.fileName; // Retrieve path of current file (to be doctested).
 
-        return {"python": pythonPath,
-                "doctest": doctestPath,
-                "file": filePath};
-    }
+		this.utils.dualLog(
+			"> Retrieving paths..." +
+				"\n> Python: " +
+				pythonPath +
+				"\n> Doctest: " +
+				doctestPath +
+				"\n> Doctest: " +
+				doctestPath
+		);
 
-    getDoctestCommand(verbose?: boolean) {
-        /*
+		return { python: pythonPath, doctest: doctestPath, file: filePath };
+	}
+
+	getDoctestCommand(verbose?: boolean) {
+		/*
             Format the doctest command to be run.
         */
-        var v = " ";
-        if (verbose === true) { v = " -v "; }
-        else if ( verbose === false ) { v = " "; }
-        else {
-            /* Get from config*/
-            v = " -v ";
-        }
+		var v = " ";
+		if (verbose === true) {
+			v = " -v ";
+		} else if (verbose === false) {
+			v = " ";
+		} else {
+			/* Get from config*/
+			v = " -v ";
+		}
 
-        const paths = this.getPaths();
-        let doctestCommand = paths.python + " -m " + paths.doctest + v + "\"" + paths.file + "\"";
-        this.utils.dualLog("> Command: " + doctestCommand);
-        return doctestCommand;
-    }
+		const paths = this.getPaths();
+		let doctestCommand = paths.python + " -m " + paths.doctest + v + '"' + paths.file + '"';
+		this.utils.dualLog("> Command: " + doctestCommand);
+		return doctestCommand;
+	}
 
-    getStatusbarConfig() {
-        /*
+	getStatusbarConfig() {
+		/*
             Return the boolean values for the status bar configuration options.
         */
-        var dtCountConfig = vscode.workspace.getConfiguration('doctestbtn').statusBar.showDoctestCount;
-        var dtStatusConfig = vscode.workspace.getConfiguration('doctestbtn').statusBar.showDoctestStatus;
+		var dtCountConfig = vscode.workspace.getConfiguration("doctestbtn").statusBar.showDoctestCount;
+		var dtStatusConfig = vscode.workspace.getConfiguration("doctestbtn").statusBar.showDoctestStatus;
 
-        return { dtCountConfig, dtStatusConfig };
-    }
+		return { dtCountConfig, dtStatusConfig };
+	}
 
-    getLinterConfig() {
-        /*
+	getLinterConfig() {
+		/*
             Return the string value for the doctest linting configuration.
         */
-        var lintCondition = vscode.workspace.getConfiguration('doctestbtn').statusBar.lintCondition;
+		var lintCondition = vscode.workspace.getConfiguration("doctestbtn").statusBar.lintCondition;
 
-        return lintCondition;
-    }
+		return lintCondition;
+	}
 
-    showDoctestBtn() {
-        /*
+	showDoctestBtn() {
+		/*
             Makes the doctest button and status bar counter visible after setting counter to given count.
         */
-        vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
-    }
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
+	}
 
-    hideDoctestBtn() {
-        /*
+	hideDoctestBtn() {
+		/*
             Hides the doctest button and status bar counter.
         */
-        vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
-    }
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
+	}
 
-    showDoctestCount(totalDoctests: Number) {
-        /*
+	showDoctestCount(totalDoctests: Number) {
+		/*
             Shows the doctest count status bar item.
-        */ 
-        this.doctestCount.text = "Doctests: " + totalDoctests;
-        this.doctestCount.show();
-    }
+        */
+		this.doctestCount.text = "Doctests: " + totalDoctests;
+		this.doctestCount.show();
+	}
 
-    hideDoctestCount() {
-        /*
+	hideDoctestCount() {
+		/*
             Hides the doctest count status bar item.
-        */ 
-        this.doctestCount.hide();
-    }
+        */
+		this.doctestCount.hide();
+	}
 
-    showDoctestStatus(status: string) {
-        /*
+	showDoctestStatus(status: string) {
+		/*
             Shows the doctest status bar item with the current status.
         */
-        this.doctestStatus.text = "Status: " + status;
-        this.doctestStatus.show();
-    }
+		this.doctestStatus.text = "Status: " + status;
+		this.doctestStatus.show();
+	}
 
-    hideDoctestStatus() { 
-        /*
+	hideDoctestStatus() {
+		/*
             Hides the doctest status bar item.
         */
-        this.doctestStatus.hide();
-    }
+		this.doctestStatus.hide();
+	}
 
-    pushDiagnostic(range: vscode.Range, message: string): number {
-        /*
+	pushDiagnostic(range: vscode.Range, message: string): number {
+		/*
             Pushes the given diagnostic item to current diagnostics.
             Returns the current number of diagnostics.
         */
-        let severity = vscode.DiagnosticSeverity.Warning; // TODO: get from config
-        this.diagnostics.push(new vscode.Diagnostic(range, message, severity));
+		let severity = vscode.DiagnosticSeverity.Warning; // TODO: get from config
+		this.diagnostics.push(new vscode.Diagnostic(range, message, severity));
 
-        return this.diagnostics.length;
-    }
+		return this.diagnostics.length;
+	}
 
-    updateDiagnostics(docUri: vscode.Uri) {
-        /*
+	updateDiagnostics(docUri: vscode.Uri) {
+		/*
             Resets the diagnostic collection with the current set of diagnostics.
             Clears diagnostics.
         */
-        this.diagnosticCollection.clear;
-        this.diagnosticCollection.set(docUri, this.diagnostics);
-        this.diagnostics = [];
-    }
+		this.diagnosticCollection.clear;
+		this.diagnosticCollection.set(docUri, this.diagnostics);
+		this.diagnostics = [];
+	}
 }
