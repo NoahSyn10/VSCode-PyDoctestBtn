@@ -1,10 +1,16 @@
 /*
-	VSCode-PyDoctestBtn
-	extension.ts
-	© 2024 Noah Synowiec - @NoahSyn10
+	PyDoctestBtn
+	Extension Activation
+	© 2021 Noah Synowiec - noahsyn1@gmail.com
 */
 
+import { fstat } from "fs";
+import { eventNames, stderr } from "process";
 import * as vscode from "vscode";
+
+import { DoctestBtn } from "./DoctestBtn";
+import { ConfigHandler } from "./Handlers";
+import { Utils } from "./Utils";
 
 export function activate(context: vscode.ExtensionContext) {
 	/*
@@ -43,12 +49,6 @@ export function activate(context: vscode.ExtensionContext) {
 	doctestBtn.updateAll(vscode.window.activeTextEditor);
 }
 
-export function deactivate() {
-	/*
-		Called upon closure of extension.
-	*/
-}
-
 export function readConfig(dtBtnObj: DoctestBtn) {
 	/*
 		Retrieve config values and adjust functionality accordingly
@@ -82,4 +82,10 @@ export function readConfig(dtBtnObj: DoctestBtn) {
 			break;
 		}
 	}
+}
+
+export function deactivate() {
+	/*
+		Called upon closure of extension.
+	*/
 }
