@@ -187,15 +187,16 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.88.0",
 		"@types/mocha": "^10.0.6",
 		"@types/node": "^20.12.7",
+		"@types/vscode": "^1.88.0",
 		"@typescript-eslint/eslint-plugin": "^7.7.0",
 		"@typescript-eslint/parser": "^7.7.0",
 		"@vscode/test-electron": "^2.3.9",
 		"eslint": "^8.56.0",
 		"glob": "^10.3.12",
 		"mocha": "^10.4.0",
+		"prettier": "^3.2.5",
 		"typescript": "^5.4.5"
 	}
 }
