@@ -1,0 +1,26 @@
+[ ] Implement Doctest Detection.
+    [x] Detect doctests in python files.
+    [x] Only show button when doctests are present.
+    [x] Show number of tests found in status bar.
+    [ ] Maybe show tests passed/failed?
+
+[ ] More commands
+    [ ] Command to switch between button themes
+    [ ] Command to enable/disable doctestbtn
+    [ ] Command to enable/disable background doctesting?
+    [ ] (Probably not) Command to 'lint' using doctest
+
+[ ] More Settings
+    [ ] Add command structure setting.
+        - Would allow you to change the structure of the command sent during doctest execution
+    [ ] Setting for enabling/disabling doctestbtn
+    [ ] Setting for enabling/disabling background doctesting?
+    [ ] Setting to run background testing on save/type?
+
+[ ] Status Bar Items
+    [x] Doctest Counter
+        [ ] maybe route to settings?
+    [ ] Pass/fail Counter
+        - redirect to the first failed doctest?
+    [ ] Possible options: Pass/fail doctests, pass/fail modules, mix
+        - could even have a formattable setting like discord extension
