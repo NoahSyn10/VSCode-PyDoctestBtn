@@ -29,7 +29,8 @@ export class Configuration {
 		/**
 		 * TODO:
 		 * - get paths (python path, doctest path)
-		 * - format doctest commant? (minus file path?)
+		 * - format doctest comment? (minus file path?)
+		 *    - OR keep doctestcommand logic in doctest button code??
 		 * - get status bar configuration
 		 * - get linter configuration
 		 * -
