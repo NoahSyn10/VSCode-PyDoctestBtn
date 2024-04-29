@@ -17,12 +17,14 @@
 	"license": "MIT",
 	"homepage": "https://github.com/NoahSyn10/VSCode-PyDoctestBtn/blob/main/README.md",
 	"engines": {
-		"vscode": "^1.52.0"
+		"vscode": "^1.88.0"
 	},
 	"categories": [
 		"Programming Languages",
-		"Other"
+		"Testing",
+		"Linters"
 	],
+	"keywords": ["Python", "Doctest", "Unit Test", "Testing", "Linter"],
 	"icon": "assets/images/icon_512px.png",
 	"galleryBanner": {
 		"color": "#2b2b2b",
@@ -150,6 +152,11 @@
 					"type": "string",
 					"default": "doctest",
 					"description": "Path to doctest module, you can use a custom module by editing this feild."
+				},
+				"doctestbtn.defaultPythonPath": {
+					"type": "string",
+					"default": "python",
+					"description": "Path to python interpereter, change if a different interpereter path is needed."
 				},
 				"doctestbtn.statusBar.showDoctestCount": {
 					"type": "boolean",

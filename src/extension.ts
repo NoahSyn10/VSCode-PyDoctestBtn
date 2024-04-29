@@ -1,18 +1,48 @@
-/*
-	VSCode-PyDoctestBtn
-	extension.ts
-	© 2024 Noah Synowiec - @NoahSyn10
-*/
+/**
+ * VSCode-PyDoctestBtn
+ * extension.ts
+ * © 2024 Noah Synowiec - @NoahSyn10
+ */
 
 import * as vscode from "vscode";
 
+import { LoggerHelper } from "./helper/LoggerHelper";
+import { Configuration } from "./module/Configuration";
+import { DoctestButton } from "./module/DoctestButton";
+
 export function activate(context: vscode.ExtensionContext) {
+	// Initialize LogOutputChannel for use by extension
+	let log = LoggerHelper.initializeLogger(context, "DoctestBtn");
+	log.info("DoctestButton Active");
+
+	// Handle Configuration Management
+	let config = new Configuration(context);
+	config.refreshContext();
+	let configListener = vscode.workspace.onDidChangeConfiguration(() => {
+		config.refreshContext();
+	});
+	context.subscriptions.push(configListener);
+
+	// DoctestButton Setup
+	let doctestBtn = new DoctestButton(context);
+	let plainButton = vscode.commands.registerCommand("doctestbtn.execDoctest_plain", () => doctestBtn.executeDoctest());
+	let fancyButton = vscode.commands.registerCommand("doctestbtn.execDoctest_fancy", () => doctestBtn.executeDoctest());
+	let xtraFancyButton = vscode.commands.registerCommand("doctestbtn.execDoctest_xtraFancy", () => doctestBtn.executeDoctest());
+	context.subscriptions.push(plainButton);
+	context.subscriptions.push(fancyButton); // Initialize each button command (one for each 'style')
+	context.subscriptions.push(xtraFancyButton);
+}
+
+// TODO: REMOVE
+export function oldActivate(context: vscode.ExtensionContext) {
 	/*
 		Called once upon activation of extension.
 		Initializes elements and listeners.
-	*/
-	let doctestBtn = new DoctestBtn();
-	let utils = new Utils();
+	*
+	// let doctestBtn = new DoctestBtn();
+	// let utils = new Utils();
+
+	let config = new Configuration(context);
 
 	readConfig(doctestBtn);
 	let configListener = vscode.workspace.onDidChangeConfiguration(() => readConfig(doctestBtn));
@@ -40,46 +70,11 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(editorSwitchListener); // Listen for change of active doc.
 	context.subscriptions.push(saveListener); // Listen for save of active doc.
 
-	doctestBtn.updateAll(vscode.window.activeTextEditor);
+	doctestBtn.updateAll(vscode.window.activeTextEditor); */
 }
 
 export function deactivate() {
 	/*
 		Called upon closure of extension.
 	*/
-}
-
-export function readConfig(dtBtnObj: DoctestBtn) {
-	/*
-		Retrieve config values and adjust functionality accordingly
-	*/
-	let config = new ConfigHandler();
-
-	// Status Bar Configurations
-	let statusBarConfig = config.getStatusbarConfig();
-	if (statusBarConfig.dtCountConfig) {
-		dtBtnObj.dtCountEnabled = true;
-	} else {
-		dtBtnObj.dtCountEnabled = false;
-		dtBtnObj.config.hideDoctestCount();
-	}
-	if (statusBarConfig.dtStatusConfig) {
-		dtBtnObj.dtStatusEnabled = true;
-	} else {
-		dtBtnObj.dtStatusEnabled = false;
-		dtBtnObj.config.hideDoctestStatus();
-	}
-
-	let lintCondition = config.getLinterConfig();
-	switch (lintCondition) {
-		case "Never": {
-			break;
-		}
-		case "On Save": {
-			break;
-		}
-		case "On Change": {
-			break;
-		}
-	}
 }
