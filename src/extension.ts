@@ -6,14 +6,15 @@
 
 import * as vscode from "vscode";
 
-import { LoggerHelper } from "./helper/LoggerHelper";
+import { Logger } from "./helper/Logger";
 import { Configuration } from "./module/Configuration";
 import { DoctestButton } from "./module/DoctestButton";
 
 export function activate(context: vscode.ExtensionContext) {
 	// Initialize LogOutputChannel for use by extension
-	let log = LoggerHelper.initializeLogger(context, "DoctestBtn");
-	log.info("DoctestButton Active");
+	Logger.initLogChannel("DoctestBtn");
+	let log = new Logger("Activate");
+	log.info(`\n${"=".repeat(350)}\nActivating PyDoctestBtn\n${"=".repeat(350)}`);
 
 	// Handle Configuration Management
 	let config = new Configuration(context);

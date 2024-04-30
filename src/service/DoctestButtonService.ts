@@ -6,18 +6,18 @@
 
 import * as vscode from "vscode";
 
-import { LoggerHelper } from "../helper/LoggerHelper";
+import { Logger } from "../helper/Logger";
+
+let log: Logger = new Logger("DoctestButtonService");
 
 /**
  * Doctest Button Service
  */
 export class DoctestButtonService {
 	context: vscode.ExtensionContext;
-	log: vscode.LogOutputChannel;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-		this.log = LoggerHelper.getLogger(context);
 	}
 
 	public static getDoctestCommand(pythonPath: string, doctestPath: string, filePath: string, verbose: boolean = true): string {
@@ -27,7 +27,7 @@ export class DoctestButtonService {
 		}
 
 		let doctestCommand = pythonPath + " -m " + doctestPath + v + '"' + filePath + '"';
-		// TODO: this.log.info("Doctest Command Generated: {}", doctestCommand);
+		log.debug(`Doctest Command Generated: [${doctestCommand}]`);
 		return doctestCommand;
 	}
 }

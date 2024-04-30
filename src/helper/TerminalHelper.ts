@@ -6,18 +6,18 @@
 
 import * as vscode from "vscode";
 
-import { LoggerHelper } from "./LoggerHelper";
+import { Logger } from "./Logger";
+
+let log: Logger = new Logger("TerminalHelper");
 
 /**
- * Terminal
+ * TerminalHelper
  */
 export class TerminalHelper {
 	context: vscode.ExtensionContext;
-	log: vscode.LogOutputChannel;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-		this.log = LoggerHelper.getLogger(context);
 	}
 
 	/**
@@ -31,11 +31,11 @@ export class TerminalHelper {
 	 * @param name Terminal name to search for
 	 * @returns The terminal object if found, undefined otherwise
 	 */
-	public static findTerminal(name: String): vscode.Terminal | undefined {
+	public static findTerminal(name: string): vscode.Terminal | undefined {
 		const activeTerminals: readonly vscode.Terminal[] = vscode.window.terminals;
-		for (let i = 0; i < activeTerminals.length; i++) {
-			if (activeTerminals[i].name === name) {
-				return activeTerminals[i];
+		for (const terminal of activeTerminals) {
+			if (terminal.name === name) {
+				return terminal;
 			}
 		}
 		return undefined;
@@ -54,16 +54,16 @@ export class TerminalHelper {
 		let doctestTerminal = this.findTerminal("Doctest");
 
 		if (pythonTerminal) {
-			//this.log.info("'Python' terminal found");
+			log.info("'Python' terminal found");
 			return pythonTerminal;
 		} else if (doctestTerminal) {
-			//this.log.info("'Doctest' terminal found");
+			log.info("'Doctest' terminal found");
 			return doctestTerminal;
 		} else if (vscode.window.activeTerminal) {
-			//this.log.info("'{}' terminal found", vscode.window.activeTerminal.name);
+			log.info("'{}' terminal found", vscode.window.activeTerminal.name);
 			return vscode.window.activeTerminal;
 		} else {
-			//this.log.info("Creating 'Doctest' terminal");
+			log.info("Creating 'Doctest' terminal");
 			return vscode.window.createTerminal("Doctest");
 		}
 	}

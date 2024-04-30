@@ -6,20 +6,20 @@
 
 import * as vscode from "vscode";
 
-import { LoggerHelper } from "../helper/LoggerHelper";
+import { Logger } from "../helper/Logger";
 import { TerminalHelper } from "../helper/TerminalHelper";
 import { DoctestButtonService } from "../service/DoctestButtonService";
+
+let log: Logger = new Logger("DoctestButton");
 
 /**
  * Doctest Button
  */
 export class DoctestButton {
 	context: vscode.ExtensionContext;
-	log: vscode.LogOutputChannel;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-		this.log = LoggerHelper.getLogger(context);
 	}
 
 	/**
@@ -29,6 +29,8 @@ export class DoctestButton {
 	 * - Send the Doctest command to the terminal
 	 */
 	public executeDoctest() {
+		log.info(`Doctest Button pressed for file: ['${vscode.window.activeTextEditor?.document.fileName!}']`);
+
 		let terminal: vscode.Terminal = TerminalHelper.getMainTerminal();
 		let pythonPath: string | undefined = this.context.workspaceState.get("PYTHON_PATH");
 		if (pythonPath === undefined) {
@@ -41,7 +43,7 @@ export class DoctestButton {
 			this.context.workspaceState.get("DOCTEST_PATH")!,
 			vscode.window.activeTextEditor?.document.fileName!
 		);
-		this.log.info("Executing Doctest with command: [{}] in terminal '{}'", doctestCommand, terminal.name);
+		log.info(`Executing Doctest with command: [${doctestCommand}] in terminal '${terminal.name}'`);
 
 		vscode.window.activeTextEditor!.document.save();
 		terminal.show();

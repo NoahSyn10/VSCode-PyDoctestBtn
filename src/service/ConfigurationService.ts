@@ -6,6 +6,10 @@
 
 import * as vscode from "vscode";
 
+import { Logger } from "../helper/Logger";
+
+let log: Logger = new Logger("ConfigurationService");
+
 /**
  * ConfigurationService
  */
@@ -28,12 +32,6 @@ export class ConfigurationService {
 	public static getPythonPath(): string {
 		let document = vscode.window.activeTextEditor?.document;
 
-		// First try python extension
-		let pyPath = this.getConfiguration("python").pythonPth;
-		if (pyPath !== undefined) {
-			return pyPath;
-		}
-
 		// If path could not be found from extension, try to find it elsewhere. Default to doctestbtn config.
 		let defaultPath = vscode.workspace.getConfiguration("doctestbtn").defaultPythonPath;
 		try {
@@ -41,6 +39,7 @@ export class ConfigurationService {
 			// return path from doctestbtn settings if python extension is not present
 			if (!extension) {
 				// TODO: warn user? give options?
+				log.info(`Default Python path [${defaultPath}] from DoctestBtn extension used`);
 				return defaultPath;
 			}
 			if (extension.packageJSON?.featureFlags?.usingNewInterpreterStorage) {
@@ -49,25 +48,35 @@ export class ConfigurationService {
 					extension.activate();
 				}
 				const pythonPath = extension.exports.settings.getExecutionCommand(document?.uri).join(" ");
+				log.info(`Python path [${pythonPath}] retrieved from the ms-python.python extension`);
 				return pythonPath;
 			} else {
 				// get from python extension settings
-				return this.getConfiguration("python").pythonPath;
+				let pyPath = this.getConfiguration("python").pythonPath;
+				log.info(`Python path [${pyPath}] retrieved from the Python extension`);
+				return pyPath;
 			}
 		} catch (error) {
+			log.info(`Default Python path [${defaultPath}] from DoctestBtn extension used`);
 			return defaultPath;
 		}
 	}
 
 	public static getDoctestPath(): string {
-		return this.getConfiguration("doctestbtn").doctestPath;
+		let dtPath = this.getConfiguration("doctestbtn").doctestPath;
+		log.info(`Doctest Path: [${dtPath}]`);
+		return dtPath;
 	}
 
 	public static getStatusbarPreference(): boolean {
-		return this.getConfiguration("doctestbtn").statusBar.showDoctestStatus;
+		let sbPreference = this.getConfiguration("doctestbtn").statusBar.showDoctestStatus;
+		log.info(`Show StatusBar: [${sbPreference}]`);
+		return sbPreference;
 	}
 
 	public static getLinterPreference(): string {
-		return this.getConfiguration("doctestbtn").statusBar.lintCondition;
+		let lntPreference = this.getConfiguration("doctestbtn").statusBar.lintCondition;
+		log.info(`Lint Condition: [${lntPreference}]`);
+		return lntPreference;
 	}
 }
