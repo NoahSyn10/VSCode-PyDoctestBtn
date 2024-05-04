@@ -37,6 +37,8 @@ export class Configuration {
 		workspaceState.update("STATUSBAR_PREFERENCE", ConfigurationService.getStatusbarPreference());
 		workspaceState.update("LINTER_PREFERENCE", ConfigurationService.getLinterPreference());
 
+		//workspaceState.update("DIAGNOSTICS_COLLECTION", vscode.languages.createDiagnosticCollection("doctest"));
+
 		/**
 		 * TODO:
 		 * - get paths (python path, doctest path)

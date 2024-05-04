@@ -9,6 +9,7 @@ import * as vscode from "vscode";
 import { Logger } from "./helper/Logger";
 import { Configuration } from "./module/Configuration";
 import { DoctestButton } from "./module/DoctestButton";
+import { DoctestLinter } from "./module/DoctestLinter";
 
 export function activate(context: vscode.ExtensionContext) {
 	// Initialize LogOutputChannel for use by extension
@@ -32,6 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(plainButton);
 	context.subscriptions.push(fancyButton); // Initialize each button command (one for each 'style')
 	context.subscriptions.push(xtraFancyButton);
+
+	// DoctestLinter Setup
+	let doctestLinter = new DoctestLinter(context);
+	let onSaveListener = vscode.workspace.onDidSaveTextDocument((doc: vscode.TextDocument) => doctestLinter.executeLinter(doc));
+	context.subscriptions.push(onSaveListener);
 }
 
 // TODO: REMOVE

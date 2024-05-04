@@ -8,7 +8,7 @@ import * as vscode from "vscode";
 
 import { Logger } from "../helper/Logger";
 import { TerminalHelper } from "../helper/TerminalHelper";
-import { DoctestButtonService } from "../service/DoctestButtonService";
+import { DoctestHelper } from "../helper/DoctestHelper";
 
 let log: Logger = new Logger("DoctestButton");
 
@@ -38,7 +38,7 @@ export class DoctestButton {
 			return;
 		}
 
-		let doctestCommand: string = DoctestButtonService.getDoctestCommand(
+		const doctestCommand: string = DoctestHelper.getDoctestCommand(
 			pythonPath,
 			this.context.workspaceState.get("DOCTEST_PATH")!,
 			vscode.window.activeTextEditor?.document.fileName!

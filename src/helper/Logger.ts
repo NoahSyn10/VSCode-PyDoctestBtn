@@ -4,13 +4,12 @@
  * © 2024 Noah Synowiec - @NoahSyn10
  */
 
-import { error } from "console";
 import * as vscode from "vscode";
 
 export class Logger {
 	private static logChannel: vscode.LogOutputChannel;
-	private alias: string;
-	private logString: string;
+	private alias: string = "";
+	private logString: string = "";
 
 	/**
 	 * Initialize a {@link vscode.LogOutputChannel LogOutputChannel} with the given name and store it as a class variable.
@@ -26,20 +25,31 @@ export class Logger {
 	}
 
 	/**
-	 * Logger Constructor
-	 *
-	 * Stores either the alias or the name of the given Class for use when logging
+	 * Logger an be initialized with an optional alias
 	 *
 	 * @param alias A name for the logger to be created OR a Class from which to extract the name
 	 */
-	constructor(alias: string | (new (...args: any[]) => any)) {
+	constructor(alias?: string | (new (...args: any[]) => any)) {
+		if (alias !== undefined) {
+			this.setAlias(alias);
+		}
+	}
+
+	/**
+	 * Stores either the given string or the name of the given class for use during logging
+	 *
+	 * @param alias A name for the logger to be created OR a Class from which to extract the name
+	 */
+	setAlias(alias: string | (new (...args: any[]) => any)) {
 		if (typeof alias === "string") {
 			this.alias = alias;
 		} else {
 			this.alias = alias.name;
 		}
 
-		this.logString = `${this.alias}${" ".repeat(20 - this.alias.length)} :: `;
+		if (this.alias.length !== 0) {
+			this.logString = `${this.alias}${" ".repeat(20 - this.alias.length)} :: `;
+		}
 	}
 
 	/**
@@ -117,3 +127,5 @@ export class Logger {
 		}
 	}
 }
+
+export const log: Logger = new Logger(); // TODO: USE OR NOT?
