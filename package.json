@@ -44,7 +44,7 @@
 		"commands": [
 			{
 				"command": "doctestbtn.execDoctest_plain",
-				"title": "Doctest Python File in Terminal",
+				"title": "Run Doctests in Terminal",
 				"category": "Doctest",
 				"icon": {
 					"light": "./assets/images/icoSvg_light_plain.svg",
@@ -53,7 +53,7 @@
 			},
 			{
 				"command": "doctestbtn.execDoctest_fancy",
-				"title": "Doctest Python File in Terminal",
+				"title": "Run Doctests in Terminal",
 				"category": "Doctest",
 				"icon": {
 					"light": "./assets/images/icoSvg_light_wBlue.svg",
@@ -62,7 +62,7 @@
 			},
 			{
 				"command": "doctestbtn.execDoctest_xtraFancy",
-				"title": "Doctest Python File in Terminal",
+				"title": "Run Doctests in Terminal",
 				"category": "Doctest",
 				"icon": {
 					"light": "./assets/images/icoSvg_light_fullColor.svg",
@@ -99,17 +99,17 @@
 				{
 					"command": "doctestbtn.execDoctest_plain",
 					"when": "editorLangId == python",
-					"title": "Doctest Python File in Terminal"
+					"title": "Run Doctests in Terminal"
 				},
 				{
 					"command": "doctestbtn.execDoctest_fancy",
 					"when": "None",
-					"title": "Doctest Python File in Terminal"
+					"title": "Run Doctests in Terminal"
 				},
 				{
 					"command": "doctestbtn.execDoctest_xtraFancy",
 					"when": "None",
-					"title": "Doctest Python File in Terminal"
+					"title": "Run Doctests in Terminal"
 				}
 			],
 			"editor/title": [

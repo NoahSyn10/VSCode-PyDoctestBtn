@@ -36,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// DoctestLinter Setup
 	let doctestLinter = new DoctestLinter(context);
+	doctestLinter.executeLinter(vscode.window.activeTextEditor?.document!);
 	let onSaveListener = vscode.workspace.onDidSaveTextDocument((doc: vscode.TextDocument) => doctestLinter.executeLinter(doc));
 	context.subscriptions.push(onSaveListener);
 }

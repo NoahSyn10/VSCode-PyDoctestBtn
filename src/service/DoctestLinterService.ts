@@ -46,4 +46,56 @@ export class DoctestLinterService {
 
 		return failures;
 	}
+
+	public static getDiagnostic(range: vscode.Range, message: string, severity: vscode.DiagnosticSeverity): vscode.Diagnostic {
+		let diagnostic = new vscode.Diagnostic(range, message, severity);
+		diagnostic.source = "DoctestBtn";
+		return diagnostic;
+	}
+
+	public static countDoctests(textEditor: vscode.TextEditor): number[] {
+		/*
+            Searches the given document for valid doctests.
+            Returns the number of valid docstrings and doctests in the active file.
+        */
+		var tripleDoubleQuotes = 0;
+		var tripleSingleQuotes = 0;
+		var totalDocstrings = 0;
+		var totalDoctests = 0;
+
+		const doc = textEditor.document;
+
+		for (var i = 0; i < doc.lineCount; i++) {
+			// Iterate through each line of text in the active doc
+			const line = doc.lineAt(i);
+
+			if (!line.isEmptyOrWhitespace) {
+				// Ignore if whitespace
+				const txtIndex = line.firstNonWhitespaceCharacterIndex;
+				const text = line.text.slice(txtIndex); // Ignore whitespace up to first character
+
+				if (text.slice(0, 3) === '"""' && tripleSingleQuotes % 2 === 0) {
+					// Count """ if not in ''' docstring
+					tripleDoubleQuotes++;
+				} else if (text.slice(0, 3) === "'''" && tripleDoubleQuotes % 2 === 0) {
+					// Count ''' if not in """ docstring
+					tripleSingleQuotes++;
+				} else if (
+					text.slice(0, 4) === ">>> " &&
+					text.trim().length > 4 && // Count >>> if followed by a space and a
+					(tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)
+				) {
+					// character and inside a """ or ''' docstring.
+					totalDoctests++;
+				}
+			}
+		}
+
+		// Total docstrings = sum of floor division of total ''' and """ instances
+		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);
+
+		log.info(`Found ${totalDoctests} Doctests, ${totalDocstrings} Docstrings`);
+
+		return [totalDoctests, totalDocstrings];
+	}
 }

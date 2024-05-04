@@ -37,7 +37,8 @@ export class Configuration {
 		workspaceState.update("STATUSBAR_PREFERENCE", ConfigurationService.getStatusbarPreference());
 		workspaceState.update("LINTER_PREFERENCE", ConfigurationService.getLinterPreference());
 
-		//workspaceState.update("DIAGNOSTICS_COLLECTION", vscode.languages.createDiagnosticCollection("doctest"));
+		workspaceState.update("DIAGNOSTICS_COLLECTION", vscode.languages.createDiagnosticCollection("doctest"));
+		workspaceState.update("DOCTEST_STATUS", vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3));
 
 		/**
 		 * TODO:
