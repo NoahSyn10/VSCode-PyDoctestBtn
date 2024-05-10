@@ -1,5 +1,7 @@
 # DoctestBtn README
 
+[![version](https://img.shields.io/visual-studio-marketplace/v/noahsyn10.pydoctestbtn) ![downloads](https://img.shields.io/visual-studio-marketplace/i/noahsyn10.pydoctestbtn) ![rating](https://img.shields.io/visual-studio-marketplace/r/noahsyn10.pydoctestbtn?color=inactive)](https://marketplace.visualstudio.com/items?itemName=NoahSyn10.pydoctestbtn)
+
 DoctestBtn is a simple VSCode extension that aims to replicate the ease of use of the 'run button' included in Microsoft's [Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) and apply it to running Python [doctests](https://docs.python.org/3/library/doctest.html).
 
 ## Features
