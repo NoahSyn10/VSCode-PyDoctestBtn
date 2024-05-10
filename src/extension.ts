@@ -37,8 +37,19 @@ export function activate(context: vscode.ExtensionContext) {
 	// DoctestLinter Setup
 	let doctestLinter = new DoctestLinter(context);
 	doctestLinter.executeLinter(vscode.window.activeTextEditor?.document!);
+	doctestLinter.updateDoctestVisibility(vscode.window.activeTextEditor!);
+
 	let onSaveListener = vscode.workspace.onDidSaveTextDocument((doc: vscode.TextDocument) => doctestLinter.executeLinter(doc));
+	let editorSwitchListener = vscode.window.onDidChangeActiveTextEditor((newTextEditor?: vscode.TextEditor) => {
+		doctestLinter.executeLinter(newTextEditor?.document!);
+		doctestLinter.updateDoctestVisibility(newTextEditor!);
+	});
+	let onEditListener = vscode.workspace.onDidChangeTextDocument((docChange: vscode.TextDocumentChangeEvent) => {
+		doctestLinter.updateDoctestVisibility(vscode.window.activeTextEditor!, docChange);
+	});
 	context.subscriptions.push(onSaveListener);
+	context.subscriptions.push(editorSwitchListener);
+	context.subscriptions.push(onEditListener);
 }
 
 // TODO: REMOVE

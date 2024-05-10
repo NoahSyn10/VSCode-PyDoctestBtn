@@ -14,14 +14,8 @@ import { ConfigurationService } from "../service/ConfigurationService";
 export class Configuration {
 	context: vscode.ExtensionContext;
 
-	// doctestCount: vscode.StatusBarItem;
-	// doctestStatus: vscode.StatusBarItem;
-
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
-
-		// this.doctestCount = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
-		// this.doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
 	}
 
 	/**
@@ -32,13 +26,21 @@ export class Configuration {
 	public refreshContext() {
 		let workspaceState = this.context.workspaceState;
 
+		// Preferences
 		workspaceState.update("PYTHON_PATH", ConfigurationService.getPythonPath());
 		workspaceState.update("DOCTEST_PATH", ConfigurationService.getDoctestPath());
 		workspaceState.update("STATUSBAR_PREFERENCE", ConfigurationService.getStatusbarPreference());
 		workspaceState.update("LINTER_PREFERENCE", ConfigurationService.getLinterPreference());
 
+		// Diagnostics Collection
 		workspaceState.update("DIAGNOSTICS_COLLECTION", vscode.languages.createDiagnosticCollection("doctest"));
-		workspaceState.update("DOCTEST_STATUS", vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3));
+
+		// Statusbar Item
+		let doctestStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100.3);
+		doctestStatus.name = "Doctest Status";
+		doctestStatus.tooltip = "Run Doctests in Terminal";
+		doctestStatus.command = "doctestbtn.execDoctest_plain";
+		workspaceState.update("DOCTEST_STATUS", doctestStatus);
 
 		/**
 		 * TODO:

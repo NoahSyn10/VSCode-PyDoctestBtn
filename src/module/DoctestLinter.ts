@@ -29,9 +29,6 @@ export class DoctestLinter {
 		this.diagnosticsList = [];
 		this.diagnosticCollection = this.context.workspaceState.get("DIAGNOSTICS_COLLECTION")!;
 		this.doctestStatus = this.context.workspaceState.get("DOCTEST_STATUS")!;
-		this.doctestStatus.name = "Doctest Status";
-		this.doctestStatus.tooltip = "Run Doctests in Terminal";
-		this.doctestStatus.command = "doctestbtn.execDoctest_plain";
 
 		// TODO: make status go away when not in python editor
 	}
@@ -49,7 +46,6 @@ export class DoctestLinter {
 			this.context.workspaceState.get("DOCTEST_PATH")!,
 			textDoc.fileName,
 			false
-			//vscode.window.activeTextEditor?.document.fileName!
 		);
 
 		log.info(`Executing Doctest Linter...`);
@@ -71,25 +67,53 @@ export class DoctestLinter {
 		});
 	}
 
+	/**
+	 * Update the Diagnostics Collection with the contents of the Diagnostics List, and reset the list
+	 * @param docUri
+	 */
 	updateDiagnostics(docUri: vscode.Uri) {
 		this.failureCount = this.diagnosticsList.length;
 		this.updateStatus();
 
 		log.info(`Updating diagnostics with ${this.diagnosticsList.length} items`);
-		this.diagnosticCollection.clear;
+		this.diagnosticCollection.clear();
 		this.diagnosticCollection.set(docUri, this.diagnosticsList);
 		this.diagnosticsList = [];
 	}
 
+	/**
+	 * Update the Doctest Statusbar item with the current doctest count and the pass/fail count
+	 */
 	updateStatus() {
 		let doctestCount = DoctestLinterService.countDoctests(vscode.window.activeTextEditor!);
 		this.doctestStatus.text = `Doctests: ${doctestCount[0]} `;
 
+		let passingCount = doctestCount[0] - this.failureCount;
+
+		log.info(`Updating statusbar for ${doctestCount[0]} doctests with ${passingCount} passing and ${this.failureCount} failing`);
 		if (this.failureCount === 0) {
 			this.doctestStatus.text += `(All Passing)`;
 		} else {
-			this.doctestStatus.text += `(${doctestCount[0] - this.failureCount} pass / ${this.failureCount} fail)`;
+			this.doctestStatus.text += `(${passingCount} pass / ${this.failureCount} fail)`;
 		}
-		this.doctestStatus.show();
+	}
+
+	/**
+	 * Determine whether the doctest button and statusbar item should be shown, and handle accordingly
+	 */
+	updateDoctestVisibility(textEditor: vscode.TextEditor, docChange?: vscode.TextDocumentChangeEvent) {
+		if (docChange && (docChange.document.languageId !== "python" || docChange.document.fileName !== textEditor.document.fileName)) {
+			return; // Check if change was in active python editor.
+		}
+
+		let doctestCount = DoctestLinterService.countDoctests(textEditor);
+
+		if (textEditor.document.languageId !== "python" || doctestCount[0] === 0) {
+			DoctestLinterService.hideDoctestBtn();
+			this.doctestStatus.hide();
+		} else {
+			DoctestLinterService.showDoctestBtn();
+			this.doctestStatus.show();
+		}
 	}
 }

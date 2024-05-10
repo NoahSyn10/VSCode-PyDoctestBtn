@@ -8,7 +8,6 @@ import * as vscode from "vscode";
 
 import { Logger } from "../helper/Logger";
 import { DoctestFailure } from "../models/DoctestFailure";
-import { DoctestHelper } from "../helper/DoctestHelper";
 
 let log: Logger = new Logger("DoctestLinterService");
 
@@ -58,14 +57,14 @@ export class DoctestLinterService {
             Searches the given document for valid doctests.
             Returns the number of valid docstrings and doctests in the active file.
         */
-		var tripleDoubleQuotes = 0;
-		var tripleSingleQuotes = 0;
-		var totalDocstrings = 0;
-		var totalDoctests = 0;
+		let tripleDoubleQuotes = 0;
+		let tripleSingleQuotes = 0;
+		let totalDocstrings = 0;
+		let totalDoctests = 0;
 
 		const doc = textEditor.document;
 
-		for (var i = 0; i < doc.lineCount; i++) {
+		for (let i = 0; i < doc.lineCount; i++) {
 			// Iterate through each line of text in the active doc
 			const line = doc.lineAt(i);
 
@@ -74,14 +73,14 @@ export class DoctestLinterService {
 				const txtIndex = line.firstNonWhitespaceCharacterIndex;
 				const text = line.text.slice(txtIndex); // Ignore whitespace up to first character
 
-				if (text.slice(0, 3) === '"""' && tripleSingleQuotes % 2 === 0) {
+				if (text.startsWith('"""') && tripleSingleQuotes % 2 === 0) {
 					// Count """ if not in ''' docstring
 					tripleDoubleQuotes++;
-				} else if (text.slice(0, 3) === "'''" && tripleDoubleQuotes % 2 === 0) {
+				} else if (text.startsWith("'''") && tripleDoubleQuotes % 2 === 0) {
 					// Count ''' if not in """ docstring
 					tripleSingleQuotes++;
 				} else if (
-					text.slice(0, 4) === ">>> " &&
+					text.startsWith(">>> ") &&
 					text.trim().length > 4 && // Count >>> if followed by a space and a
 					(tripleSingleQuotes % 2 === 1 || tripleDoubleQuotes % 2 === 1)
 				) {
@@ -97,5 +96,13 @@ export class DoctestLinterService {
 		log.info(`Found ${totalDoctests} Doctests, ${totalDocstrings} Docstrings`);
 
 		return [totalDoctests, totalDocstrings];
+	}
+
+	public static showDoctestBtn() {
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", true);
+	}
+
+	public static hideDoctestBtn() {
+		vscode.workspace.getConfiguration("doctestbtn").update("showButton", false);
 	}
 }

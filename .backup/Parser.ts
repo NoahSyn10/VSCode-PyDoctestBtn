@@ -69,9 +69,7 @@ export class Parser {
 		// Total docstrings = sum of floor division of total ''' and """ instances
 		totalDocstrings = ~~(tripleDoubleQuotes / 2) + ~~(tripleSingleQuotes / 2);
 
-		this.utils.dualLog(
-			"> Counting doctests..." + "\n> Doctests: " + totalDoctests + "\n> Docstrings: " + totalDocstrings
-		);
+		this.utils.dualLog("> Counting doctests..." + "\n> Doctests: " + totalDoctests + "\n> Docstrings: " + totalDocstrings);
 
 		callback(totalDoctests, totalDocstrings);
 	}
