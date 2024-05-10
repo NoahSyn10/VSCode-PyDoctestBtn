@@ -29,16 +29,7 @@ export class DoctestLinter {
 		this.diagnosticsList = [];
 		this.diagnosticCollection = this.context.workspaceState.get("DIAGNOSTICS_COLLECTION")!;
 		this.doctestStatus = this.context.workspaceState.get("DOCTEST_STATUS")!;
-
-		// TODO: make status go away when not in python editor
 	}
-
-	/**
-	 * TODO:
-	 * - run doctests in background
-	 * - parse the errors into objects
-	 * - pass the errors to the Diagnostics
-	 */
 
 	async executeLinter(textDoc: vscode.TextDocument) {
 		const doctestCommand = DoctestHelper.getDoctestCommand(

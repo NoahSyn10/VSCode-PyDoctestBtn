@@ -41,22 +41,5 @@ export class Configuration {
 		doctestStatus.tooltip = "Run Doctests in Terminal";
 		doctestStatus.command = "doctestbtn.execDoctest_plain";
 		workspaceState.update("DOCTEST_STATUS", doctestStatus);
-
-		/**
-		 * TODO:
-		 * - get paths (python path, doctest path)
-		 * - format doctest comment? (minus file path?)
-		 *    - OR keep doctestcommand logic in doctest button code??
-		 * - get status bar configuration
-		 * - get linter configuration
-		 * -
-		 *
-		 * RELOCATE:
-		 * - getting of file path
-		 * - show/hide button
-		 * - show/hide doctest count statusbar item
-		 * - show/hide doctest status statusbar item
-		 * - push/update diagnostics
-		 */
 	}
 }
