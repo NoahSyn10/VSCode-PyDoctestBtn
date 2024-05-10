@@ -22,12 +22,6 @@ export class TerminalHelper {
 	}
 
 	/**
-	 * TODO:
-	 * - execute a command in the terminal
-	 * - execute command in the background? (should this be handled elsewhere?)
-	 */
-
-	/**
 	 * Searches for an open terminal with the given name
 	 * @param name Terminal name to search for
 	 * @returns The terminal object if found, undefined otherwise
@@ -82,7 +76,6 @@ export class TerminalHelper {
 			exec(command, (error, stdout, stderr) => {
 				if (error) {
 					log.info(`Doctest Failures Found`);
-					//reject(error);
 				}
 				if (stderr) {
 					log.error(`stderr: ${stderr}`);

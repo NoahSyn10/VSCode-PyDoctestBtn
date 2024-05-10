@@ -38,7 +38,6 @@ export class ConfigurationService {
 			const extension = vscode.extensions.getExtension("ms-python.python");
 			// return path from doctestbtn settings if python extension is not present
 			if (!extension) {
-				// TODO: warn user? give options?
 				log.info(`Default Python path [${defaultPath}] from DoctestBtn extension used`);
 				return defaultPath;
 			}
